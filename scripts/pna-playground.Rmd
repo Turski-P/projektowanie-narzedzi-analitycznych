@@ -1,0 +1,161 @@
+#PNA zadania
+
+---
+title: "pna_zad"
+output: html_document
+date: "2026-11-03"
+---
+```{r}
+library(tidyr)
+```
+
+Zadanie 2
+
+Wprowadź wektory i macierze:
+```{r}
+
+a <- c() 
+for (i in 1:6) {
+  a <- append(a, c(log(10)))
+}
+```
+```{r}
+x <- log(10)
+b <- rep(x,6)
+b
+```
+zadanie 3
+```{r}
+s <- c(1,2,3,4,5)
+s <- s + 100
+s
+```
+zadanie 4
+```{r}
+for (i in 1:300) {
+  a <- append(a, i^2)
+}
+a <- sum(a)
+a
+```
+
+```{r}
+d <- c(7,10,9,-5,6,-14,8,-19,-9,-17,12)
+
+which(d == 0)
+which(d>0)
+which(d<0)
+d2 <- which(d>0)
+d2
+d4 <- replace(d, which(d<0), 999)
+d4
+```
+ zadanie 7
+```{r}
+m1 <- matrix(seq(1,10), nrow=10, ncol=1)
+for (i in 2:10){
+  m1 <- cbind(m1, c(i*1,i*2,i*3,i*4,i*5,i*6,i*7,i*8,i*9,i*10))
+}
+m1
+```
+ ##Temat 2 Statystya Opisowa
+ 
+```{r}
+x <- c(7,3,1,6,1,2,4,6,2,8,4,2,8,4)
+x_m <- mean(x)
+x_m
+S2 <- (1/(length(x)-1))*(sum((x-x_m)^2))
+S2
+s <- sqrt(S2)
+s
+var(x) #nieobciazaone
+
+```
+zadanie 1.2
+```{r}
+k <- c(2.0, 2.3, 2.7, 2.8, 2.9, 2.7, 2.6, 2.6, 2.5, 2.6, 2.7, 2.8, 2.8, 2.7, 2.7, 2.6, 2.6, 2.6, 2.6, 2.6, 2.7, 2.6, 2.6, 2.5, 2.4, 2.4, 2.3)
+
+sk <- var(k)
+avg_k <- mean(k)
+avg_k
+sdk <- sd(k)
+sdk
+wzk <- sdk/avg_k
+wzk
+
+```
+wartosci krytyczne
+
+
+```{r}
+dnorm(-1) #gestość, wysokosc stozka w punckje x
+pnorm(1)
+qnorm(0.95) 
+
+```
+
+
+```{r}
+qnorm(0.95)
+qt(0.95, 50)
+
+qchisq(0.95, 4)
+```
+
+
+Zadanie 3.1 (zadanie 6.1 z [2])
+
+Firma telekomunikacyjna chce oszacować średnią długość rozmów zamiejscowych w soboty i niedziele na podstawie 20-elementowej próby losowej, dla której średnia wynosi 14,5 i odchylenie standardowe 5,6. Zakładając, że czas rozmowy ma rozkład normalny, wyznaczyć realizację przedziału ufności dla wartości oczekiwanej czasu rozmowy na poziomie ufności 95%. Jak zmieni się długość przedziału ufności, gdy poziom ufności wzrośnie?
+
+```{r}
+a <- 1 - 0.99
+n <- 20
+x <- 14.5
+s <- 5.6
+
+
+t_kryt <- qt(1-a/2,df=n-1)
+blad <- t_kryt*(s/sqrt(n))
+kp <-  x - blad
+kl <- x+blad
+kp
+kl
+```
+Zadanie 3.2 (zadanie 6.3 z [2])
+
+Właściciel kantoru wymiany walut na lotnisku chce wyestymować średnią wielkość gotówki potrzebną do wymiany nocą franków na dolary. Z doświadczenia właściciel wie, że wielkość popytu na dolary ma rozkład normalny. Obserwując popyt przez 10 dni właściciel otrzymał wyniki: [srednia z proby] = 24.4 S[odchylenie z proby] = 3.5. Podać realizację przedziału ufności dla wartości oczekiwanej popytu na poziomie ufności 0,9.
+
+wystymowac srednia populacji
+
+```{r}
+x <- 24.4
+s <- 3.5
+n <- 10
+alpha <- 1 - 0.9
+kryt <- qt(1-alpha/2,n-1)
+kryt
+blad <- kryt*(s/sqrt(n))
+k_p <- x - blad
+k_l <- x + blad
+k_p
+k_l
+
+
+```
+Zadanie 3.3 (zadanie 6.6 z [2])
+
+Procent gospodarstw rolnych, których właściciele przekroczyli 60 lat, oznaczmy przez 100%θ. W celu oszacowania parametru θ pobrano spośród gospodarstw 400-elementową próbkę losową i okazało się, że 144 właścicieli przekroczyło 60 lat. Zbudować przedział ufności dla parametru θ na poziomie ufności 0,95.
+
+```{r}
+#modl V -tak
+alpha <- 1-0.95
+n <- 400
+#sukcesy k
+k <- 144
+#porazki n
+l <- 256
+pk <- k/n
+
+
+
+```
