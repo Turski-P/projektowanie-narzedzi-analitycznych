@@ -1,0 +1,5 @@
+---
+title: "PNA_powtorka"
+output: html_document
+date: '23.10.2026'
+---

@@ -1,0 +1,68 @@
+---
+title: "PNA_ZAJ4"
+output: html_document
+date: "2026-10-29"
+---
+```{r}
+library(tidyr)
+```
+
+Zadanie 1
+```{r}
+curve(sin((10*pi/3)*x), from = 0, to = 1, n=25, col='cyan', ylab='value', xlab="π", xlim = c(-5, 5), ylim = c(-5, 5), lwd = 15, main = 'wykresik :)')
+
+curve(sin((10*pi/3)*x), from = 0, to = 1, n=25, col='deeppink3', ylab='value', xlab="π", xlim = c(-5, 5), ylim = c(-5, 5), lwd = 5, main = 'wykresik :)',add=T)
+```
+zadanie 2Za pomocą polecenia read.csv wczytać dane z pliku EngScoResults.csv. Sporządzić wykresy rozproszenia dla:
+
+a) liczby zdobytych goli przez Anglików,
+
+b) liczby zdobytych goli przez Szkotów w meczach w Szkocji.
+```{r}
+data <- read.csv('EngScoResults.csv', sep=";", header=T)
+data$Rok <- as.numeric(data$Rok)
+head(data)
+
+```
+```{r}
+sum(data$Goals.England)
+
+data2 <- which(data$Host == 'Scotland')
+head(data2)
+```
+
+zadanie suma goli w meczach wk torych anglicy strrzelili wiecej 
+```{r}
+data <- read.csv('EngScoResults.csv', sep=";", header=T)
+data$Rok <- as.numeric(data$Rok)
+
+filtr <- which(data$Goals.England>data$Goals.Scotland)
+plot(data$Goals.England)
+
+```
+ wykresy kwantylowe 
+```{r}
+data2 <- read.csv("PNA_Z03.csv")
+x <- data2$x
+qqnorm(x, main="normal qq plot")
+abline(0,1)
+qnorm(1-0.05/2)
+probs <- seq(0.01, 1-0.01, by=0.01)
+kw_teoretyczne <- qnorm(probs)
+kw_empiryczne <- quantile(x, probs = probs)
+plot(kw_teoretyczne, kw_empiryczne)
+```
+Zadanie 4
+
+Wygenerować zmienną tSt zawierającą 1000 obserwacji z rozkładu t-Studenta z 3 stopniami swobody. Sporządzić wykres kwantylowy zmiennej z kwantylami z rozkładu:
+
+```{r}
+tSt <- rt(x=x, n=1000, df = 3)
+probs <- seq(0.01, 1-0.01, by=0.01)
+q_n <- qnorm(probs)
+q_ts <- quantile(tSt, probs = probs)
+plot(q_n, q_ts)
+kw_df <- data.frame(norm=q_n, tstudent=q_ts)
+kw_df
+```
+

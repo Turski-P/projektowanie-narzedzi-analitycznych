@@ -1,0 +1,25 @@
+---
+title: "PNA_zaj2"
+output: html_document
+date: "2026-10-15"
+---
+wyklad 15.10
+
+```{r}
+#CMD ALT I 
+#CMD SHIT ENTER
+library(tidyverse)
+library(rmarkdown)
+```
+
+```{r}
+k <-  c(2.0, 2.3, 2.7, 2.8, 2.9, 2.7, 2.6, 2.6, 2.5, 2.6, 2.7, 2.8, 2.8, 2.7, 2.7, 2.6, 2.6, 2.6, 2.6, 2.6, 2.7, 2.6, 2.6, 2.5, 2.4, 2.4, 2.3)
+
+mean(k)
+median(k)
+sd(k)
+
+```
+
+
+

@@ -1,0 +1,110 @@
+---
+title: "PNA_zaj3"
+output: html_document
+date: "2026-10-22"
+---
+```{r}
+library(tidyr)
+```
+Przedzialy ufnosci
+
+Zadanie 3.1 (zadanie 6.1 z [2])
+
+Firma telekomunikacyjna chce oszacować średnią długość rozmów zamiejscowych w soboty i niedziele na podstawie 20-elementowej próby losowej, dla której średnia wynosi 14,5 i odchylenie standardowe 5,6. Zakładając, że czas rozmowy ma rozkład normalny, wyznaczyć realizację przedziału ufności dla wartości oczekiwanej czasu rozmowy na poziomie ufności 95%. Jak zmieni się długość przedziału ufności, gdy poziom ufności wzrośnie?
+```{r}
+n <- 20
+sr <- 14.5
+sd <- 5.6
+alpha <- 0.05
+#lewa i prawa strona
+L <- sr - qnorm(1-alpha/2,0,1)*sd/sqrt(n)
+P <-sr + qnorm(1-alpha/2,0,1)*sd/sqrt(n)
+c(L,P)
+```
+```{r}
+#wyzszy przedzial ufnosci
+n <- 20
+sr <- 14.5
+sd <- 5.6
+alpha <- 0.1
+#lewa i prawa strona
+L <- sr - qnorm(1-alpha/2,0,1)*sd/sqrt(n)
+P <-sr + qnorm(1-alpha/2,0,1)*sd/sqrt(n)
+D <- qnorm(1-alpha/2,0,1)*sd
+c(L,P)
+D
+```
+Zadanie 3.4 (zadanie 6.7 z [2])
+
+Analityk chce oszacować procent rynku mikrokomputerów opanowany przez IBM. Próba losowa złożona z 590 spółek używających mikrokomputery dała rezultat, że 500 spółek miało komputery IBM. Podać 95% przedział ufności dla procentu rynku opanowanego przez IBM.
+
+```{r}
+n <- 590
+r <- 500
+alpha <- 0.05
+
+phat <- 500/590
+L <- phat - qnorm((1-alpha)/2)*sqrt(phat*(1-phat))/sqrt(n)
+P <- phat + qnorm((1-alpha)/2)*sqrt(phat*(1-phat))/sqrt(n)
+
+c(L,P)
+```
+
+ Zadanie 4.2 (zadanie 3.46 z [2])
+
+Wylosowano niezależnie 12 indywidualnych gospodarstw rolnych w pewnej wsi i otrzymano dla nich następujące wielkości uzyskanych plonów owsa (w q/ha): 23.3, 22.1, 21.8, 19.9, 23.7, 22.3, 22.6, 21.5, 21.9, 22.8, 23.0, 22.2. Na poziomie istotności $ALPHA = 0.05 zweryfikować hipotezę, że wartość przeciętna plonu owsa w całej wsi wynosi 22.6 q/ha, jeśli alternatywną jest hipoteza, że wartość przeciętna plonu owsa jest wyższa niż w roku ubiegłym, w którym wynosiła 22.6 q/ha.
+
+```{r}
+x <- c(23.3, 22.1, 21.8, 19.9, 23.7, 22.3, 22.6, 21.5, 21.9, 22.8, 23.0, 22.2)
+n <- length(x)
+alpha <- 0.05
+miu <- 22.6
+
+#H0 = miu = 22.6, H1: miu .22.6
+
+TT <- (mean(x)-miu)/sd(x)*sqrt(n)
+TT
+wart_kryt <- qt(1-alpha,n-1)
+wart_kryt
+wart_kryt <- qt(1-alpha, n)
+```
+
+Zadanie 5.1 (zadanie 3.58 z [1])
+
+Dla porównania regularności uzyskiwanych wyników sportowych dwóch zawodników (skok w dal) w pewnym okresie wylosowano 12 wyników skoków dla pierwszego zawodnika oraz 9 wyników drugiego, otrzymując rezultaty (w m): dla pierwszego zawodnika: 7.60, 7.81, 8.01, 7.95, 7.15, 8.06, 7.90, 7.91, 7.56, 7.62, 7.85, 8.02; dla drugiego zawodnika: 7.50, 7.90, 8.00, 7.17, 7.28, 7.35, 7.73, 7.20, 7.98. Na poziomie istotności 
+ zweryfikować hipotezę o jednakowej regularności uzyskiwanych wyników dla obydwu zawodników (tzn. hipotezę, że wariancje rezultatów obydwu zawodników są równe), wobec hipotezy alternatywnej, że regularność pierwszego zawodnika jest wyższa.
+ 
+```{r}
+s1 <- c(7.60, 7.81, 8.01, 7.95, 7.15, 8.06, 7.90, 7.91, 7.56, 7.62, 7.85, 8.02)
+s2 <- c(7.50, 7.90, 8.00, 7.17, 7.28, 7.35, 7.73, 7.20, 7.98)
+
+sd1 <- (sd(s1))^2
+sd2 <- (sd(s2))^2
+sd1
+sd2
+FF <- sd1/sd2
+FF
+#H0: F = 1 H1: F<1
+
+wart_kryt <- qf((1-alpha), (length(s1)-1),(length(s2)-1))
+wart_kryt
+p_v <- pf(FF, (length(s1)-1,length(s2)-1,)
+#dokonczyc dystrybuante do policzenia pvalue
+
+```
+ Test Barteletta
+```{r}
+x1 <- c(7.60, 7.81, 8.01, 7.95, 7.15, 8.06, 7.90, 7.91, 7.56, 7.62, 7.85, 8.02)
+x2 <- c(7.50, 7.90, 8.00, 7.17, 7.28, 7.35, 7.73, 7.20, 7.98)
+
+k <- 2
+n1 <- length(s1)
+n2 <- length(s2)
+
+v1 <- var(x1)
+v2 <- var(x2)
+
+
+```
+ 
+
