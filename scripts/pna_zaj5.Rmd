@@ -1,0 +1,93 @@
+---
+title: "PNA_05.11"
+output: html_document
+date: "2026-11-05"
+---
+```{r}
+library(tidyr)
+
+```
+dnorm - gestosc
+pnorm - dystrybuanta
+```{r}
+tst <- rt(10^5, 3)
+
+x <- seq(-4,5,by=0.01)
+
+dystrybuanta_empiryczna <- ecdf(tst)
+
+plot(x, dystrybuanta_empiryczna(x), col = 'red', lwd=4 )
+lines(x, pt(x, df=3),lwd=2)
+
+```
+Tworzenie estymatora gesstosci
+```{r}
+gestosc_emp <- density(tst, bw = 'SJ-dpi', adjust=1,
+                       kernel = 'gaussian', from =-5, to=5)
+gestosc_emp
+plot(gestosc_emp$x,gestosc_emp$y, col='red', lwd=4) 
+lines(gestosc_emp$x, dt(gestosc_emp$x, df=3), col = 'blue', lwd =2) #czy to jest teoretyczny?
+```
+Zadanie 7
+
+Napisać funkcję ProcentZer, która dla podanej macierzy zawierającej 0 i 1 zwróci udział liczby zer w liczbie elementów macierzy.
+```{r}
+ProcentZer <- function(x) {
+  suma <- 0
+  for (a in x) {
+    if (a==0)
+      suma <- suma + 1
+  }
+  return(suma/length(x))
+}
+
+a <- matrix(rbinom(100, size=1, prob=1/2),ncol=10)
+ProcentZer(a)
+```
+```{r}
+JarqueBeraTest(x)
+```
+
+Test Jarue-Bera
+Napisać program/procedurę realizującą test Jarque-Bera. Program powinien zwracać wartość statystyki testowej, p-value oraz zmienną zero-jedynkową z wynikiem testu (odrzucenie/nieodrzucenie H0).
+
+Zadanie 10
+```{r}
+a <- rnorm(1000)
+JarqueBera <- function(a) {
+  n <- length(a)
+  a_mean <- mean(a)
+  SL <- (1/n)*(sum((a-a_mean)^3))
+  SM <- ((1/n)*(sum((a-a_mean)^2))^(3/2))
+  S <- SL/SM
+  CL <- (1/n)*(sum((a-a_mean)^4))
+  CM <- ((1/n)*((sum(a-a_mean)^2))^(2))
+  C <- CL/CM
+    
+    JB <- (n/6)*(S^2 +((1/4)*(C-3)^2))
+    
+    pv <- 1-pchisq(JB,2,lower.tail=T)
+    wynik=100
+    
+#NIESKONCZONE
+    
+  }
+```
+Zadanie11
+Przeprowadzić eksperyment składający się z 10 tysięcy powtórzeń wygenerowania zmiennej o 100 obserwacjach z rozkładu t-Studenta z 12 stopniami swobody i przeprowadzeniu testu JB. W każdym powtórzeniu zapisujemy wynik (statystykę testową lub wynik zero-jedynkowy). Sprawdzić, w jakim procencie przypadków test wskazuje prawidłowy wynik.
+
+```{r}
+#nieskonczone
+w <- c()
+  
+for (i in 10000) {
+  i <- rt(100, df=12)
+  x <-  jarque.bera.test(i)
+  w <- append(w, x)
+  w
+}
+
+```
+
+
+
