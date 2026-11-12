@@ -1,0 +1,99 @@
+---
+title: "pna7"
+output: html_document
+date: "2026-11-12"
+---
+```{r}
+library(tidyr)
+library(readxl)
+library(readr)
+search()
+```
+
+macierz i poziuom istntonsici
+wielksoc statstyyki testowehj, p value i czy przyjmuje czu orzuaca
+```{r}
+k <- c(20,60,40)
+m <- c(45,15,20)
+
+m <- matrix(c(k,m), nrow=3,ncol=2,
+            dimnames = list(c('wole A', 'wole B','nie widze różnicy'),
+                            c('kobiety','mezczyzni')))
+m
+
+chi <- chisq.test(m, correct = F)
+chi$residuals
+
+chi$p.value
+chi
+```
+Test Jarque-Bera
+Zadanie 1
+
+Sprawdzić normalność rozkładu zmiennej:
+
+
+```{r}
+vec1 <- read_csv("data/vec1.csv")
+View(vec1)
+library(readr)
+vec3 <- read_csv("data/vec3.csv")
+View(vec3)
+library(readr)
+vec4 <- read_csv("data/vec4.csv")
+View(vec4)
+library(readr)
+vec2 <- read_csv("data/vec2.csv")
+View(vec2)
+```
+sprawdzanei rozkaldu normalnego
+```{r}
+shapiro.test(vec1, mean(vec1$x))
+```
+OLS 
+```{r}
+jedynki <- c(1,1,1)
+lpg <-  c(0,1,0)
+x <- cbind(jedynki, lpg)
+y <- cbind(1,2,3)
+x
+y
+```
+
+Zadanie 6
+```{r}
+y <- vacation$miles
+x <- cbind(1, vacation$income, vacation$age, vacation$kids)
+beta_hat <- solve(t(x)%*% x) %*% t(x) %*% y
+
+
+```
+rozwaizanie wykladwoacy
+```{r}
+#dane <- read.csv('vacation.csv')
+dane <- vacation
+
+x <- cbind(1, dane$income, dane$age, dane$kids)
+y <- dane$miles
+beta_hat <- solve(t(x)%*% x) %*% t(x) %*% y
+
+model <-  lm(miles~income+age+kids, data=dane)
+model$coefficients
+summary(model)
+
+resid <- x%*%beta_hat-y
+var(resid)*(nrow(dane)-1)/(nrow(dane)-4)
+
+sqrt(var(resid)*(nrow(dane)-1)/nrow())
+```
+
+zadanie 7 
+```{r}
+dane <- vacation
+dane$miles_ogr <- dane$miles - 10 *dane$age
+model_ogr <-  lm(miles_ogr~income+age+kids, data=dane)
+summary(model_ogr)
+```
+TEMAT 5 
+Metoda najweiszkej wiarygodnosci (wazne?)
+
