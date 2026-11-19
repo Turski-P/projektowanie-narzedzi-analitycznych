@@ -1,0 +1,149 @@
+---
+title: "Untitled"
+output: html_document
+date: "2026-11-19"
+---
+```{r}
+library(maxLik)
+library(tidyr)
+library(readr)
+search()
+```
+
+
+
+## Metoda Największej Wiarygodności
+
+Zadanie 1 (Asymetryczna moneta)
+
+Załóżmy, że kupiliśmy monetę w sklepie z magicznymi rekwizytami. Moneta wygląda na symetryczną, ale niekoniecznie taka jest. Rzuciliśmy monetą 8 razy i otrzymaliśmy (O — orzeł, R — reszka):
+
+```{r}
+p <- seq(0, 1, by=0.01)
+pmf = p^5*(1-p)^3
+#pmf funkcja wiarygodnosci L(p)
+
+plot(p, pmf, type='l')
+
+logpmf <-  function(p){
+  return(5*log(p) + 3*log(1-p))
+}
+
+
+
+
+grad_logpmf <- function(p){
+  return(5/(p) +3/(1-p)*(-1))
+}
+
+hess_logpmf <- function(p){
+  return(-5/(p^2) + 3/(1-p)^2*(-1))
+}
+
+
+wynik <- maxNR(logpmf, grad=grad_logpmf, hess=hess_logpmf, start=0.1)
+wynik$estimate
+
+```
+
+Zadanie 2 (Przykład 6.1 z [3])
+
+Rozkład Poissona ma funkcję prawdopodobieństwa zadaną wzorem:
+
+```{r}
+#funckja prawdopodobienstaw, przemnozenie wynikow dla kazdego x
+x1 <- 3
+x2 <- 4
+x3 <- 3
+x4 <- 7
+x <- c(3,4,3,7)
+#L(P) = f(3,p)*f(4,p)*f(3,p)*f(7,p)
+#p - paramaetr (lambda)
+
+#mozna zrobic  loopem i dodac kazdy element do siebie
+pp <- function(lambda){
+  return(log(((lambda^x)*(exp(1)^(-lambda))/(factorial(x)))))
+}
+
+logpmf = function(lambda){
+  return(log(lambda)*sum(x))
+  
+  
+  x <- c(3, 4, 3, 7)
+
+log_L <- function(lambda) {
+  return(sum(log(((lambda^x) * (exp(-lambda))) / factorial(x))))
+}
+
+
+```
+
+Zadanie 9
+
+```{r}
+purse <- Purse_Snatch <- read_csv("Purse_Snatch.csv", col_names=F)
+
+torbki <- purse$X1
+
+
+
+log_L <- function(lambda) {
+  return(sum(log(((lambda^torbki) * (exp(-lambda))) / factorial(torbki))))
+}
+
+log_L()
+
+```
+
+Zadanie 7 (Zadanie 2.35 z [1])
+
+Pięciu strzelców strzelało do celu do momentu pierwszego trafienia. Pierwszy trafił za trzecim strzałem, drugi za czwartym, trzeci za trzecim, czwarty za drugim, piąty za siódmym strzałem:
+
+3,4,3,2,7
+
+prawdopodobienstwo trafienia jednym strzalem - p
+
+liczba strzalow do pierwszego trafienai ma rozkald geometryczny
+P(X=k)=(1-p)^(k-1)*p
+```{r}
+
+x <- c(3,4,3,2,7)
+suma <- 0
+logK <- function(p){
+  for (k in x){
+suma <- suma + log((1-p)^(k-1)*p)
+  }
+  return(suma)
+  }
+
+```
+```{r}
+logK(0.9)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
