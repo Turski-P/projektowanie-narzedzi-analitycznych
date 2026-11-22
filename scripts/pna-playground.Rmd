@@ -8,6 +8,11 @@ date: "2026-11-03"
 ```{r}
 library(tidyr)
 ```
+zadania:
+https://coin.wne.uw.edu.pl/jgajda/SemZima2026/PNA/html_c/tydzien_01/zadania.html
+wyk:
+https://coin.wne.uw.edu.pl/jgajda/SemZima2026/PNA/html_w/tydzien_01/wyklad.html
+
 
 Zadanie 2
 
@@ -31,14 +36,19 @@ s <- s + 100
 s
 ```
 zadanie 4
+Policz sume 
+\sum\limits_{i=1}^300 i^2
 ```{r}
+a <- 0
 for (i in 1:300) {
-  a <- append(a, i^2)
+  a = a + i^2
+  
 }
-a <- sum(a)
 a
 ```
-
+Zadanie 5
+dla wektora d 
+d = c(7,10,9,-5,6,-14,8,-19,-9,-17,12)
 ```{r}
 d <- c(7,10,9,-5,6,-14,8,-19,-9,-17,12)
 
@@ -50,7 +60,59 @@ d2
 d4 <- replace(d, which(d<0), 999)
 d4
 ```
- zadanie 7
+zadanie 6
+dla wetkroa g = (1,1,-1,1,1,0,2)
+a) sumę elementów,
+
+b) iloczyn elementów,
+
+c) znajdź indeks elementu równego 2,
+
+d) znajdź indeks elementu równego -1,
+
+e) znajdź indeksy elementów niedodatnich,
+
+f) znajdź liczbę elementów niedodatnich,
+
+g) sprawdź czy wszystkie elementy są dodatnie,
+
+h) sprawdź czy wszystkie elementy są mniejsze niż 100,
+
+i) sprawdź czy wektor zawiera braki danych.
+```{r}
+g = c(1,1,-1,1,1,0,2)
+sum(g)
+prod(g)
+which(g == 2)
+which(g==-1)
+which(g<=0)
+length(which(g<=0))
+length(which(g<=0)) == 0 
+length(which(g<100)) == length(g)
+```
+zadanie 7
+```{r}
+n=9
+m1 <- diag(9)
+m1
+```
+```{r}
+n <- 4
+I <- matrix(nrow = 0, ncol = n)  # Start with an empty matrix of n columns
+
+for (i in 1:n) {
+  row_vec <- rep(0, n)
+  row_vec[i] <- 1
+  I <- rbind(I, row_vec)         # Bind each new row
+}
+I
+```
+
+
+ 
+ 
+ 
+ zadanie 8
 ```{r}
 m1 <- matrix(seq(1,10), nrow=10, ncol=1)
 for (i in 2:10){
