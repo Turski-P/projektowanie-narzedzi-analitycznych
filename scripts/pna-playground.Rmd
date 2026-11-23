@@ -122,6 +122,28 @@ m1
 ```
  ##Temat 2 Statystya Opisowa
  
+ Zadanie 1.1
+
+Sprawdzić, którą wariancję wylicza się w R poleceniem var.
+```{r}
+x= c(5,2,4,5,3,6,6,4,5,2,4)
+a_x = mean(x)
+war1_sum = 0
+war1 = for (i in x){
+  wi = (i - a_x)^2
+  war1_sum = war1_sum + wi
+  
+}
+
+var(x)
+#wariancja obciazona
+(1/length(x))*war1_sum
+#wariancja nieobciazona
+(1/(length(x)-1))*war1_sum
+#wari
+```
+ 
+ 
 ```{r}
 x <- c(7,3,1,6,1,2,4,6,2,8,4,2,8,4)
 x_m <- mean(x)
@@ -146,23 +168,16 @@ wzk <- sdk/avg_k
 wzk
 
 ```
-wartosci krytyczne
 
 
-```{r}
-dnorm(-1) #gestość, wysokosc stozka w punckje x
-pnorm(1)
-qnorm(0.95) 
+Przedzialy ufnosci
 
-```
+MODEL 1
+nieznane \mu (srednia populacji), znane s(odcyhelei standardwoe)
+przdzial ufnosci na poziome 1 - alpha
 
-
-```{r}
-qnorm(0.95)
-qt(0.95, 50)
-
-qchisq(0.95, 4)
-```
+u_(1-alpha/2) - kwantyl rzedzu 1 - alpha
+[X^ - u_(1-alpha/2) * (s/sqrt(n)); X^ + u_(1-alpha/2) * (s/sqrt(n))]
 
 
 Zadanie 3.1 (zadanie 6.1 z [2])
