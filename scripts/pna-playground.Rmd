@@ -170,69 +170,303 @@ wzk
 ```
 
 
-Przedzialy ufnosci
+#2.1 Przedzialy ufnosci
+σ^2 - wariancja populacji
+S^2 - wariancja proby
+μ - srendia populacji
+X^ - srednia rpoby
 
 MODEL 1
-nieznane \mu (srednia populacji), znane s(odcyhelei standardwoe)
+X1,...Xn, dla rozkładu N(μ,σ^2 )
+nieznane μ (srednia populacji), znane σ (odcyhelei standardwoe)
 przdzial ufnosci na poziome 1 - alpha
 
 u_(1-alpha/2) - kwantyl rzedzu 1 - alpha
-[X^ - u_(1-alpha/2) * (s/sqrt(n)); X^ + u_(1-alpha/2) * (s/sqrt(n))]
+[X^ - u_(1-alpha/2) * (σ/sqrt(n)); X^ + u_(1-alpha/2) * (σ/sqrt(n))]
+
+u_(1-alpha/2) - kwantyl 1-alpha/2 rozkladu normalnego N(0,1)
+```
+qnorm(1-alpha/2)
+```
+
+MODEL 2
+
+X1,...Xn, dla rozkładu N(μ,σ^2 )
+μ nieznane, σ>0 nieznane
+przedzial ufnosci 1-alpha dla μ
+[X^ - t_(1-alpha/2)* (S/sqrt(n)); X^ + t_(1-alpha/2) * (S/sqrt(n))]
+
+t_(1-alpha/2) - rozklad t-studenta, kwantyl w miejscu 1-alpha/2
+```
+qt(1-alpha/2, df=n-1)
+```
 
 
+MODEL 3
+X1,...Xn, dla rozkładu N(μ,σ^2 )
+σ>0 nieznane. Przedzial ufnosci 1-alpha dla wariancji (S^2)
+
+[((S^2(n-1)) / chi-2(1-alpha/2,n-1) );((S^2(n-1)) / chi-2(alpha/2,n-1) )]
+
+chi-2(1-alpha/2,n-1) - kwantyl rzedu 1-alpha/2 rozkladu chi-2 o n-1 stopnach swobody
+
+```
+qchisq(1-alpha/2, df=n-1)
+```
+
+MODEL 4
+X1,...Xn, dla owolnego rozkladu o skonczonej wartosci oczekiwanej i wariancji,
+n duze (n>50), σ nieznane. przedzial ufnosci 1-alpha dla μ
+
+[X^ - u_1(1-alpha/2) * S/√n; X^ + u_1(1-alpha/2) * S/√n]
+
+MODEL 5
+N niezaleznych doswiadczen binarnych typu sukces-porażka, n duze
+X~ rozklad dwupunktowy, P(X=1) = p,pc(0,1) prawdopodibenstwo sukcesu
+przyblizony przedzial ufnosci 1 - alpha dla p
+p^ - p z proby
+
+[p^ - u_1(1-alpha/2) * (sqrt(p^(1-p^)) / √n); p^ + u_1(1-alpha/2) * (sqrt(p^(1-p^)) /√n) ]
+
+
+MOODEL 6
+Dwie niezalezne probki 
+X1, ...,Xk ~N(μx,σ^2 x), Y1, ...,Yk ~N(μY,σ^2 Y)
+P(f1(S^2_Y / S^2_X) =< (σ^2_X / σ^2_Y) =< f2(S^2_Y / S^2_X)) = 1-alpha
+f1,f2 - kwantyle rzedu alhpa/2 i 1-alpha/2 z rozkaldu F-Snedecora
+z (k-1) i (m-1) stopdni swobody
+przedzial ufnosci na poziomie 1-alpha dla waraicji
+[f1 (S^2_Y / S^2_X); f2 (S^2_Y / S^2_X)
+
+
+CO CHCESZ OSZACOWAĆ Z ZADANIA?
+│
+├── 1. PROPORCJĘ / PROCENT / FRAKCJĘ (np. "odsetek osób, które...")
+│      └──> Użyj MODELU V (qnorm, duża próba, dane typu tak/nie)
+│
+├── 2. WARIANCJĘ (lub odchylenie standardowe) JEDNEJ POPULACJI
+│      └──> Użyj MODELU III (qchisq, założenie rozkładu normalnego)[cite: 3]
+│
+├── 3. PORÓWNANIE (ILORAZ) WARIANCJI DWÓCH POPULACJI
+│      └──> Użyj MODELU VI (qf, dwie niezależne próby z rozkładów normalnych)
+│
+└── 4. ŚREDNIĄ (wartość oczekiwaną μ)
+       │
+       ├── Czy w treści podano ZNANE odchylenie/wariancję POPULACJI (σ)?
+       │    ├── TAK ──> Użyj MODELU I (qnorm)[cite: 1]
+       │    └── NIE (znamy tylko S z próby) ──┐
+       │                                      │
+       │    Czy próba jest DUŻA (n > 50)? ────┤
+       │    ├── TAK ──> Użyj MODELU IV (qnorm, działa dla dowolnego rozkładu!)[cite: 4, 5]
+       │    └── NIE ──> Użyj MODELU II (qt, wymaga rozkładu normalnego w populacji)[cite: 2]
+       
+       
 Zadanie 3.1 (zadanie 6.1 z [2])
 
 Firma telekomunikacyjna chce oszacować średnią długość rozmów zamiejscowych w soboty i niedziele na podstawie 20-elementowej próby losowej, dla której średnia wynosi 14,5 i odchylenie standardowe 5,6. Zakładając, że czas rozmowy ma rozkład normalny, wyznaczyć realizację przedziału ufności dla wartości oczekiwanej czasu rozmowy na poziomie ufności 95%. Jak zmieni się długość przedziału ufności, gdy poziom ufności wzrośnie?
 
 ```{r}
-a <- 1 - 0.99
-n <- 20
-x <- 14.5
-s <- 5.6
+n=20
 
+ex = 14.5
+es = 5.6
+#przedzial ufnosci 95%
+a = 0.05
+a2 = 0.025
+#chemy oszacowac srednia populacji
 
-t_kryt <- qt(1-a/2,df=n-1)
-blad <- t_kryt*(s/sqrt(n))
-kp <-  x - blad
-kl <- x+blad
-kp
-kl
+x1 = ex - qt(1-a/2, df=n-1)*(es/sqrt(n))
+x2 = ex + qt(1-a/2, df=n-1)*(es/sqrt(n))
+x12 = ex - qt(1-a2/2, df=n-1)*(es/sqrt(n))
+x22 = ex + qt(1-a2/2, df=n-1)*(es/sqrt(n))
+
+x1
+x2
+x1
+x2
 ```
 Zadanie 3.2 (zadanie 6.3 z [2])
 
-Właściciel kantoru wymiany walut na lotnisku chce wyestymować średnią wielkość gotówki potrzebną do wymiany nocą franków na dolary. Z doświadczenia właściciel wie, że wielkość popytu na dolary ma rozkład normalny. Obserwując popyt przez 10 dni właściciel otrzymał wyniki: [srednia z proby] = 24.4 S[odchylenie z proby] = 3.5. Podać realizację przedziału ufności dla wartości oczekiwanej popytu na poziomie ufności 0,9.
-
-wystymowac srednia populacji
-
+Właściciel kantoru wymiany walut na lotnisku chce wyestymować średnią wielkość gotówki potrzebną do wymiany nocą franków na dolary. Z doświadczenia właściciel wie, że wielkość popytu na dolary ma rozkład normalny. Obserwując popyt przez 10 dni właściciel otrzymał wyniki: X^=24.4, S=3.5. Podać realizację przedziału ufności dla wartości oczekiwanej popytu na poziomie ufności 0,9.
 ```{r}
-x <- 24.4
-s <- 3.5
-n <- 10
-alpha <- 1 - 0.9
-kryt <- qt(1-alpha/2,n-1)
-kryt
-blad <- kryt*(s/sqrt(n))
-k_p <- x - blad
-k_l <- x + blad
-k_p
-k_l
+n=10
+ex = 24.4
+es = 3.5
+a = 1-0.975
+blad = qt(1-a/2,df=n-1)*(es/sqrt(n))
 
-
+x1 = ex - blad
+x2 = ex + blad
+x1
+x2
 ```
 Zadanie 3.3 (zadanie 6.6 z [2])
 
-Procent gospodarstw rolnych, których właściciele przekroczyli 60 lat, oznaczmy przez 100%θ. W celu oszacowania parametru θ pobrano spośród gospodarstw 400-elementową próbkę losową i okazało się, że 144 właścicieli przekroczyło 60 lat. Zbudować przedział ufności dla parametru θ na poziomie ufności 0,95.
+Procent gospodarstw rolnych, których właściciele przekroczyli 60 lat, oznaczmy przez 100 theta% . W celu oszacowania parametru theta pobrano spośród gospodarstw 400-elementową próbkę losową i okazało się, że 144 właścicieli przekroczyło 60 lat. Zbudować przedział ufności dla parametru theta na poziomie ufności 0,95.
 
 ```{r}
-#modl V -tak
-alpha <- 1-0.95
-n <- 400
-#sukcesy k
-k <- 144
-#porazki n
-l <- 256
-pk <- k/n
+ep = 144/400
+n=400
+a = 1-0.95
 
+blad = qnorm(1-a/2)*((sqrt((ep)*(1-ep)))/sqrt(n))
 
+p1 = ep - blad
+p2 = ep + blad
+p1
+p2
 
 ```
+
+Zadanie 3.4 (zadanie 6.7 z [2])
+
+Analityk chce oszacować procent rynku mikrokomputerów opanowany przez IBM. Próba losowa złożona z 590 spółek używających mikrokomputery dała rezultat, że 500 spółek miało komputery IBM. Podać 95% przedział ufności dla procentu rynku opanowanego przez IBM.
+```{r}
+n=590
+ep = 500/590
+
+a = 1 - 0.95
+blad = qnorm(1-a/2)*((sqrt((ep)*(1-ep)))/sqrt(n))
+p1 = ep - blad
+p2 = ep + blad
+p1
+p2
+
+```
+
+
+# 2.2 Testowanie hipotez statystycznych — porównanie z normą
+
+μ0 - wartość postulowana średniej (norma z hipotezy H0)
+σ0^2 - wartość postulowana wariancji (norma z hipotezy H0)
+p0 - wartość postulowana frakcji/proporcji (norma z hipotezy H0)
+α - poziom istotności (ryzyko błędu I rodzaju)
+
+MODEL 1
+X1, ..., Xn — próba z rozkładu N(μ, σ^2)
+σ znane, hipoteza H0: μ = μ0
+
+Statystyka testowa:
+U = ((X^ - μ0) / σ) * sqrt(n)  ~ N(0, 1) przy prawdziwej H0
+
+Obszary krytyczne K (gdy U wpadnie do K -> odrzucamy H0):
+- H1: μ != μ0  =>  K1 = (-inf, -u_(1-alpha/2)) U (u_(1-alpha/2), +inf)
+- H2: μ > μ0   =>  K2 = (u_(1-alpha), +inf)
+- H3: μ < μ0   =>  K3 = (-inf, -u_(1-alpha))
+
+```r
+# Kwantyle w R:
+qnorm(1 - alpha/2) # dla H1 (dwustronna)
+qnorm(1 - alpha)   # dla H2 i H3 (jednostronne)
+```
+
+MODEL 2
+X1, ..., Xn — próba z rozkładu N(μ, σ^2)
+σ nieznane (używamy S z próby), hipoteza H0: μ = μ0
+Statystyka testowa:
+T = ((X^ - μ0) / S) * sqrt(n)  ~ t-Studenta(n - 1) przy prawdziwej H0
+Obszary krytyczne K (analogicznie do Modelu 1, ale t zamiast u):
+H1: μ != μ0  =>  K1 = (-inf, -t_(1-alpha/2, n-1)) U (t_(1-alpha/2, n-1), +inf)
+H2: μ > μ0   =>  K2 = (t_(1-alpha, n-1), +inf)
+H3: μ < μ0   =>  K3 = (-inf, -t_(1-alpha, n-1))
+
+```
+# Kwantyle w R:
+qt(1 - alpha/2, df = n - 1) # dla H1 (dwustronna)
+qt(1 - alpha, df = n - 1)   # dla H2 i H3 (jednostronne)
+```
+
+MODEL 3
+X1, ..., Xn — próba z rozkładu N(μ, σ^2)
+Testowanie wariancji, hipoteza H0: σ^2 = σ0^2
+Statystyka testowa:
+chi2 = ((n - 1) * S^2) / σ0^2  ~ chi-kwadrat(n - 1) przy prawdziwej H0
+Obszary krytyczne K (asymetria — brak wartości ujemnych!):
+H1: σ^2 != σ0^2  =>  K1 = (0, chi2_(alpha/2, n-1)) U (chi2_(1-alpha/2, n-1), +inf)
+H2: σ^2 > σ0^2   =>  K2 = (chi2_(1-alpha, n-1), +inf)
+H3: σ^2 < σ0^2   =>  K3 = (0, chi2_(alpha, n-1))
+
+```
+# Kwantyle w R:
+qchisq(alpha/2, df = n - 1)     # lewy ogon dla H1
+qchisq(1 - alpha/2, df = n - 1) # prawy ogon dla H1
+qchisq(1 - alpha, df = n - 1)   # dla H2 (>)
+qchisq(alpha, df = n - 1)       # dla H3 (<)
+```
+
+MODEL 4
+Dowolny rozkład o nieznanej μ i skończonej, nieznanej wariancji
+n duże (n >= 100), hipoteza H0: μ = μ0
+Statystyka testowa:
+U = ((X^ - μ0) / S) * sqrt(n)  ~ asymptotycznie N(0, 1)
+Obszary krytyczne K: identyczne jak w Modelu 1 (używamy qnorm).
+
+MODEL 5
+n niezależnych doświadczeń sukces-porażka (rozkład dwupunktowy), n duże
+X - liczba sukcesów, p^ = X / n (frakcja z próby)
+Hipoteza H0: p = p0
+Statystyka testowa:
+U* = ((p^ - p0) / sqrt(p0 * (1 - p0))) * sqrt(n)  ~ asymptotycznie N(0, 1)
+Obszary krytyczne K: identyczne jak w Modelu 1 (używamy qnorm).
+
+### Schemat decyzyjny: Który model wybrać?
+
+```text
+JAKI PARAMETR PORÓWNUJESZ Z NORMĄ W H0?
+│
+├── 1. PROPORCJĘ / PROCENT / FRAKCJĘ (H0: p = p0)
+│      └──> MODEL 5 (statystyka U*, rozkład N(0,1) -> qnorm)
+│
+├── 2. WARIANCJĘ LUB ODCHYLENIE STANDARDOWE (H0: σ^2 = σ0^2)
+│      └──> MODEL 3 (statystyka chi2, rozkład chi-kwadrat -> qchisq)
+│
+└── 3. ŚREDNIĄ (H0: μ = μ0)
+       │
+       ├── Czy w zadaniu podano ZNANE odchylenie POPULACJI (σ)?
+       │    ├── TAK ──> MODEL 1 (statystyka U, rozkład N(0,1) -> qnorm)
+       │    └── NIE (znamy tylko S z próby) ──┐
+       │                                      │
+       │    Czy próba jest DUŻA (n >= 100)? ──┤
+       │    ├── TAK ──> MODEL 4 (statystyka U, dowolny rozkład -> qnorm)[cite: 6]
+       │    └── NIE ──> MODEL 2 (statystyka T, rozkład t-Studenta -> qt)[cite: 6]
+
+
+H1: u=/=u0, dwa ogony; alpha na pol 1 - alpha/2
+H1 u>u0, jeden prawy ogon, kwantym(1-alpha) do nieskoczonsci
+H1 u<u0, jeden lewy ogon, -nieskoczonsci do kwantym(1-alpha)
+```
+
+Zadanie 4.1 (zadanie 9.1 z [2])
+
+Dzienne zużycie wody w pewnej fabryce podlega wahaniom losowym o rozkładzie normalnym z odchyleniem standardowym równym 50. Na podstawie 25 dni roku stwierdzono, że średnie dzienne zużycie wody wynosi 1025. Zweryfikować hipotezę, że wartość oczekiwana \mu dziennego zużycia wody wynosi 1000, przy alternatywie, że \mu >1000, na poziomie istotności 0,02. Podać postać obszaru krytycznego dla odpowiedniego testu.
+
+```{r}
+ps = 50
+n=25
+u0 = 1000
+ex = 1025
+a = 0.02
+
+U = ((ex-u0)/ps)*sqrt(n)
+k= c(qnorm(1-a), Inf)
+U
+k
+#U w k, odrzucamy H0
+pval = 1 - pnorm(U)
+pval
+```
+
+Zadanie 4.2 (zadanie 3.46 z [2])
+
+Wylosowano niezależnie 12 indywidualnych gospodarstw rolnych w pewnej wsi i otrzymano dla nich następujące wielkości uzyskanych plonów owsa (w q/ha): 23.3, 22.1, 21.8, 19.9, 23.7, 22.3, 22.6, 21.5, 21.9, 22.8, 23.0, 22.2. Na poziomie istotności a = 0.05 zweryfikować hipotezę, że wartość przeciętna plonu owsa w całej wsi wynosi 22.6 q/ha, jeśli alternatywną jest hipoteza, że wartość przeciętna plonu owsa jest wyższa niż w roku ubiegłym, w którym wynosiła 22.6 q/ha.
+
+```{r}
+
+n-12
+ex = c(23.3, 22.1, 21.8, 19.9, 23.7, 22.3, 22.6, 21.5, 21.9, 22.8, 23.0, 22.2)
+a = 0.05
+u0 = 22.6
+#H1: u > u0
+```
+
+
