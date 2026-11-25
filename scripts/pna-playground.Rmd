@@ -460,13 +460,73 @@ Zadanie 4.2 (zadanie 3.46 z [2])
 
 Wylosowano niezależnie 12 indywidualnych gospodarstw rolnych w pewnej wsi i otrzymano dla nich następujące wielkości uzyskanych plonów owsa (w q/ha): 23.3, 22.1, 21.8, 19.9, 23.7, 22.3, 22.6, 21.5, 21.9, 22.8, 23.0, 22.2. Na poziomie istotności a = 0.05 zweryfikować hipotezę, że wartość przeciętna plonu owsa w całej wsi wynosi 22.6 q/ha, jeśli alternatywną jest hipoteza, że wartość przeciętna plonu owsa jest wyższa niż w roku ubiegłym, w którym wynosiła 22.6 q/ha.
 
-```{r}
 
-n-12
-ex = c(23.3, 22.1, 21.8, 19.9, 23.7, 22.3, 22.6, 21.5, 21.9, 22.8, 23.0, 22.2)
+```{r}
+#H1: u>u0
+n=12
+x = c(23.3, 22.1, 21.8, 19.9, 23.7, 22.3, 22.6, 21.5, 21.9, 22.8, 23.0, 22.2)
+ex = mean(x)
+sx = sd(x)
 a = 0.05
 u0 = 22.6
+
+
+U = ((ex-22.6)/sx)*sqrt(n)
+k= qt(1-a, df=n-1)
+U
+c(k, Inf)
 #H1: u > u0
+```
+#2.3 Zadanie symulacyjne
+```{r}
+set.seed(123)
+R = 10000 #liczba powotrzen Monte Carlo
+blad_mc = function(p_hat){
+  return(sqrt((p_hat*(1-p_hat))/10000))
+}
+```
+
+MODEL 5
+N niezaleznych doswiadczen binarnych typu sukces-porażka, n duze
+X~ rozklad dwupunktowy, P(X=1) = p,pc(0,1) prawdopodibenstwo sukcesu
+przyblizony przedzial ufnosci 1 - alpha dla p
+p^ - p z proby
+
+[p^ - u_1(1-alpha/2) * (sqrt(p^(1-p^)) / √n); p^ + u_1(1-alpha/2) * (sqrt(p^(1-p^)) /√n) ]
+
+Zadanie 6.1 (rzeczywisty poziom ufności przedziału dla frakcji)
+
+1. Przedział z Modelu V (przedział Walda) ma nominalny poziom ufności 1-a=0.95.
+Dla n=30 i p {0.01, 0.02, ... 0.99} wyznacz symulacyjnie rzeczywiste prawdopodobieństwo pokrycia 
+ P_p (p ~[p^ +- u_0.975 * (sqrt((p^ *(1-p^))/n) i przedstaw je na wykresie w funkcji p.
+ 
+```{r}
+set.seed(5)
+a = 0.05
+n=30
+pp = seq(from=0.01, to=0.99, by=0.01)
+
+rozklad_p = function(p){
+  n=30
+  ep= (rbinom(10000, n, p))/n
+  
+  blad_p= qnorm(1-a/2)*(sqrt(ep*(1-ep))/sqrt(n))
+  p_lewo = ep - blad_p
+  p_prawo = ep + blad_p
+  
+  x = ifelse((p >p_lewo) & (p<p_prawo), 1,0)
+  
+  return(mean(x))
+}
+rozklad_p(pp[50])
+
+p_dist = c()
+for (i in pp){
+  d <- rozklad_p(i)
+  p_dist <- c(p_dist, d)
+}
+plot(pp, p_dist)
+
 ```
 
 

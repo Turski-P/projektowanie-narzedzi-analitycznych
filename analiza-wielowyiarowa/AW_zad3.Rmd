@@ -1,0 +1,179 @@
+---
+title: "AW"
+output: html_document
+date: "2026-11-25"
+---
+```{r}
+library(readr)
+library(dplyr)
+```
+```{r}
+ess = read_csv('ESS11e04_2.csv')
+```
+kraje w ESS
+```{r}
+table(ess$cntry)
+```
+AL Albania AT Austria BE Belgium BG Bulgaria CH Switzerland CY Cyprus CZ Czechia DE Germany DK Denmark EE Estonia ES Spain FI Finland FR France GB United Kingdom GE Georgia GR Greece HR Croatia HU Hungary IE Ireland IS Iceland IL Israel IT Italy LT Lithuania LU Luxembourg LV Latvia ME Montenegro MK North Macedonia NL Netherlands NO Norway PL Poland PT Portugal RO Romania RS Serbia RU Russian Federation SE Sweden SI Slovenia SK Slovakia TR Turkey UA Ukraine
+
+Wybieramy tylko kilka sasaidujacych krajow:
+AL Albania,BG Bulgaria, Gr Greece, HR Croatia, ME Montenegro, MK Norh Macedionia,RO Romania,RS Serbia
+```{r}
+
+ess <- ess %>%
+  filter(cntry %in% c('BG', 'GR', 'HR', 'ME', 'RS'))
+  
+table(ess$cntry)
+```
+
+
+
+
+Trzy czynniki
+- zaufanie spoleczne:
+ppltrst - Most people can be trusted or you can't be too careful
+pplfair - Most people try to take advantage of you, or try to be fair
+pplhlp - Most of the time people helpful or mostly looking out for themselves
+```{r}
+ess$ppltrst[ess$ppltrst %in% c(77,88,99)] <- NA
+ess$pplfair[ess$pplfair %in% c(77,88,99)] <- NA
+ess$pplhlp[ess$pplhlp %in% c(77,88,99)] <- NA
+```
+
+```{r}
+summary(ess$ppltrst)
+summary(ess$pplfair)
+summary(ess$pplhlp)
+
+
+cor(ess[, c("ppltrst", "pplfair", "pplhlp")], use = "complete.obs")
+```
+ppltrst najlepsza zmienna do analizy zaufania, najmniej "loaded"
+
+druga statstyka jak bardz
+- zaufanie do instytucji:
+trstprl - Trust in country's parliament
+trstlgl - Trust in the legal system
+trstplc - Trust in the police
+trstplt - Trust in politicians
+trstprt - Trust in political parties
+trstep - Trust in the European Parliament
+trstun - Trust in the United Nations
+```{r}
+ess$trstprl[ess$trstprl %in% c(77,88,99)] <- NA
+ess$trstlgl[ess$trstlgl %in% c(77,88,99)] <- NA
+ess$trstplc[ess$trstplc %in% c(77,88,99)] <- NA
+ess$trstplt[ess$trstplt %in% c(77,88,99)] <- NA
+ess$trstprt[ess$trstprt %in% c(77,88,99)] <- NA
+ess$trstep[ess$trstep %in% c(77,88,99)] <- NA
+ess$trstun[ess$trstun %in% c(77,88,99)] <- NA
+```
+
+```{r}
+summary(ess$trstprl)
+summary(ess$trstlgl)
+summary(ess$trstplc)
+summary(ess$trstplt)
+summary(ess$trstprt)
+summary(ess$trstep)
+summary(ess$trstun)
+
+cor(ess[,c("trstprl",'trstlgl', "trstplc", "trstplt", "trstprt","trstep",'trstun')],
+    use = 'complete.obs')
+```
+
+
+- dobrostan psychizcny:
+fltdpr - Felt depressed, how often past week
+flteeff - Felt everything did as effort, how often past week
+slprl - Sleep was restless, how often past week
+wrhpp - Were happy, how often past week
+fltlnl - Felt lonely, how often past week
+enjlf - Enjoyed life, how often past week
+fltsd - Felt sad, how often past week
+cldgng - Could not get going, how often past week
+
+```{r}
+ess$fltdpr[ess$fltdpr %in% c(7,8,9)] <- NA
+ess$flteeff[ess$flteeff %in% c(7,8,9)] <- NA
+ess$slprl[ess$slprl %in% c(7,8,9)] <- NA
+ess$wrhpp[ess$wrhpp %in% c(7,8,9)] <- NA
+ess$fltlnl[ess$fltlnl %in% c(7,8,9)] <- NA
+ess$enjlf[ess$enjlf %in% c(7,8,9)] <- NA
+ess$fltsd[ess$fltsd %in% c(7,8,9)] <- NA
+ess$cldgng[ess$cldgng %in% c(7,8,9)] <- NA
+```
+
+
+```{r}
+summary(ess$fltdpr)
+summary(ess$flteeff)
+summary(ess$slprl)
+summary(ess$wrhpp)
+summary(ess$fltlnl)
+summary(ess$enjlf)
+summary(ess$fltsd)
+summary(ess$cldgng)
+
+cor(ess[,c("fltdpr","flteeff", "slprl", "wrhpp", "fltlnl", "enjlf", "fltsd", "cldgng")],
+    use='complete.obs')
+```
+usuniecie NA
+```{r}
+
+dane_spol = na.omit(ess[,c("ppltrst", "pplfair", "pplhlp")])
+dane_inst = na.omit(ess[,c("trstprl",'trstlgl', "trstplc", "trstplt", "trstprt","trstep",'trstun')])
+dane_psych = na.omit(ess[,c("fltdpr","flteeff", "slprl", "wrhpp", "fltlnl", "enjlf", "fltsd", "cldgng")])
+```
+
+Liczenie PCA i wybor liczby czynnikow
+
+```{r}
+pca_spol = prcomp(dane_spol, scale. = T)
+summary(pca_spol)
+pca_inst = prcomp(dane_inst, scale =T)
+summary(pca_inst)
+pca_psych = prcomp(dane_psych, scale =T)
+summary(pca_psych)
+```
+Ładunki czynnikowe
+
+Za punkt odciecai wyberamy prób 70% wyjasnionej wariancji
+```{r}
+# 1. Zaufanie społeczne - 1 czynnik
+ladunki_spol <- round(pca_spol$rotation[, 1, drop = FALSE] * pca_spol$sdev[1], 3)
+print(ladunki_spol)
+
+# 2. Zaufanie do instytucji-  2 czynniki
+ladunki_inst <- round(t(t(pca_inst$rotation[, 1:2]) * pca_inst$sdev[1:2]), 3)
+print(ladunki_inst)
+
+# 3. Dobrostan psychiczny (2 czynniki)
+ladunki_psych <- round(t(t(pca_psych$rotation[, 1:2]) * pca_psych$sdev[1:2]), 3)
+print(ladunki_psych)
+```
+1. Zafuenie Spoleczne
+Wszystkie trzy zmienne maja bardzo wysokie dodatnie ładunki. 
+Wysoki wynik respondenda na osi PC1 oznacza, że jest on ogłnie ufającą osobą
+
+2. Zaufanei do instytucji
+W PC1 wszystkie kolumny sa dodatnie. Najwieszkym zaufanim dazy sie parlament, najmniejszym Narody Zjednocznone.
+W PC2 ładunki zaufanai do instytucji zagranicznych staja sie ujemne. Wysoki wynik PC2 oznaza osobe, ktora bardziej ufa instytucjom kajowym niz miedzynarodowym
+
+3. Dobrostan psychiczny
+Pytania o negatywne stany: smutek, przygnebienie, samotnosc, barak energii, poczucie, ze wszystko jest wysilkiem sa dodatnie,
+a emocje pozytywen: szczescie i radosc z zcyia sa ujmene. Wysoki PC1 oznacza osobe smyna i rzygnebiona.
+W kolumnie PC2 wybijaja sie zmienne wrhpp - bycie szczesiwym i enjlf - radoscc z zcycia
+
+
+
+Wykresy
+```{r}
+par(mfrow = c(1, 3))
+screeplot(pca_spol, type = "lines", main = "Zaufanie społeczne"); abline(h = 1, col = "red", lty = 2)
+screeplot(pca_inst, type = "lines", main = "Zaufanie do instytucji"); abline(h = 1, col = "red", lty = 2)
+screeplot(pca_psych, type = "lines", main = "Dobrostan psychiczny"); abline(h = 1, col = "red", lty = 2)
+```
+
+
+

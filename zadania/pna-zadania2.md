@@ -1,271 +1,527 @@
-# Zadania 2 — Statystyka opisowa, przedziały ufności, testowanie hipotez
+#AW_ AKT_03_456310
+
+```{r}
+library(tidyr)
+```
+zadania:
+https://coin.wne.uw.edu.pl/jgajda/SemZima2026/PNA/html_c/tydzien_01/zadania.html
+wyk:
+https://coin.wne.uw.edu.pl/jgajda/SemZima2026/PNA/html_w/tydzien_01/wyklad.html
 
 
-## Statystyka opisowa
+Zadanie 2
 
-Wariancją z próby losowej $X_1,X_2,\ldots,X_n$ nazywamy liczbę
+Wprowadź wektory i macierze:
+```{r}
 
-$$\hat{S}^{2}=\frac{1}{n}\sum_{i=1}^{N}\left(X_{i}-\bar{X}\right)^{2}$$
+a <- c() 
+for (i in 1:6) {
+  a <- append(a, c(log(10)))
+}
+```
+```{r}
+x <- log(10)
+b <- rep(x,6)
+b
+```
+zadanie 3
+```{r}
+s <- c(1,2,3,4,5)
+s <- s + 100
+s
+```
+zadanie 4
+Policz sume 
+\sum\limits_{i=1}^300 i^2
+```{r}
+a <- 0
+for (i in 1:300) {
+  a = a + i^2
+  
+}
+a
+```
+Zadanie 5
+dla wektora d 
+d = c(7,10,9,-5,6,-14,8,-19,-9,-17,12)
+```{r}
+d <- c(7,10,9,-5,6,-14,8,-19,-9,-17,12)
 
-Nieobciążony estymator wariancji określamy jako
+which(d == 0)
+which(d>0)
+which(d<0)
+d2 <- which(d>0)
+d2
+d4 <- replace(d, which(d<0), 999)
+d4
+```
+zadanie 6
+dla wetkroa g = (1,1,-1,1,1,0,2)
+a) sumę elementów,
 
-$$S^{2}=\frac{1}{n-1}\sum_{i=1}^{N}\left(X_{i}-\bar{X}\right)^{2}$$
+b) iloczyn elementów,
 
-Wskaźnik asymetrii to
+c) znajdź indeks elementu równego 2,
 
-$$g_{1}=\frac{M_{3}}{\hat{S}^{3}}=\frac{\frac{1}{N}\sum_{i=1}^{N}\left(X_{i}-\bar{X}\right)^{3}}{\hat{S}^{3}}$$
+d) znajdź indeks elementu równego -1,
 
-Współczynnik koncentracji (skupienia, kurtozy) to
+e) znajdź indeksy elementów niedodatnich,
 
-$$g_{2}=\frac{M_{4}}{\hat{S}^{4}}=\frac{\frac{1}{N}\sum_{i=1}^{N}\left(X_{i}-\bar{X}\right)^{4}}{\hat{S}^{4}}$$
+f) znajdź liczbę elementów niedodatnich,
 
-Odchylenie standardowe: $\hat{S}=\sqrt{\hat{S}^{2}}$.
+g) sprawdź czy wszystkie elementy są dodatnie,
 
-Odchylenie przeciętne: $d=\frac{1}{n}\sum_{i=1}^{n}|X_{i}-\bar{X}|$.
+h) sprawdź czy wszystkie elementy są mniejsze niż 100,
 
-Współczynnik zmienności: $V=\frac{\hat{S}}{\bar{X}}100\%$.
+i) sprawdź czy wektor zawiera braki danych.
+```{r}
+g = c(1,1,-1,1,1,0,2)
+sum(g)
+prod(g)
+which(g == 2)
+which(g==-1)
+which(g<=0)
+length(which(g<=0))
+length(which(g<=0)) == 0 
+length(which(g<100)) == length(g)
+```
+zadanie 7
+```{r}
+n=9
+m1 <- diag(9)
+m1
+```
+```{r}
+n <- 4
+I <- matrix(nrow = 0, ncol = n)  # Start with an empty matrix of n columns
 
-**Wskaźniki asymetrii**
+for (i in 1:n) {
+  row_vec <- rep(0, n)
+  row_vec[i] <- 1
+  I <- rbind(I, row_vec)         # Bind each new row
+}
+I
+```
 
-Współczynnik asymetrii (klasyczny): $A=\frac{M_{3}}{\hat{S}^{3}}$, gdzie $M_3$ jest trzecim momentem centralnym równym dla danych surowych $M_{3}=\frac{1}{n}\sum_{i=1}^{k}n_{i}(X_{i}-\bar{X})^{3}$.
 
-Pozycyjny miernik asymetrii: $A_{2}=\frac{Q_{3}-2Med+Q_{1}}{Q_{3}-Q_{1}}$.
+ 
+ 
+ 
+ zadanie 8
+```{r}
+m1 <- matrix(seq(1,10), nrow=10, ncol=1)
+for (i in 2:10){
+  m1 <- cbind(m1, c(i*1,i*2,i*3,i*4,i*5,i*6,i*7,i*8,i*9,i*10))
+}
+m1
+```
+ ##Temat 2 Statystya Opisowa
+ 
+ Zadanie 1.1
 
-Współczynnik skośności: $A_{1}=\frac{\bar{X}-Mo}{S}$.
+Sprawdzić, którą wariancję wylicza się w R poleceniem var.
+```{r}
+x= c(5,2,4,5,3,6,6,4,5,2,4)
+a_x = mean(x)
+war1_sum = 0
+war1 = for (i in x){
+  wi = (i - a_x)^2
+  war1_sum = war1_sum + wi
+  
+}
 
-**Zadanie 1.1**
+var(x)
+#wariancja obciazona
+(1/length(x))*war1_sum
+#wariancja nieobciazona
+(1/(length(x)-1))*war1_sum
+#wari
+```
+ 
+ 
+```{r}
+x <- c(7,3,1,6,1,2,4,6,2,8,4,2,8,4)
+x_m <- mean(x)
+x_m
+S2 <- (1/(length(x)-1))*(sum((x-x_m)^2))
+S2
+s <- sqrt(S2)
+s
+var(x) #nieobciazaone
 
-Sprawdzić, którą wariancję wylicza się w R poleceniem `var`.
+```
+zadanie 1.2
+```{r}
+k <- c(2.0, 2.3, 2.7, 2.8, 2.9, 2.7, 2.6, 2.6, 2.5, 2.6, 2.7, 2.8, 2.8, 2.7, 2.7, 2.6, 2.6, 2.6, 2.6, 2.6, 2.7, 2.6, 2.6, 2.5, 2.4, 2.4, 2.3)
 
-**Zadanie 1.2** (zadanie 1.34 z [1])
+sk <- var(k)
+avg_k <- mean(k)
+avg_k
+sdk <- sd(k)
+sdk
+wzk <- sdk/avg_k
+wzk
 
-Liczba koni (w mln szt.) w Polsce w kolejnych latach od 1947 do 1974 wynosiła: 2,0; 2,3; 2,7; 2,8; 2,9; 2,7; 2,6; 2,6; 2,5; 2,6; 2,7; 2,8; 2,8; 2,7; 2,7; 2,6; 2,6; 2,6; 2,6; 2,6; 2,7; 2,6; 2,6; 2,5; 2,4; 2,4; 2,3. Obliczyć: średnią liczbę koni w tym okresie, medianę, odchylenie standardowe, współczynnik zmienności.
+```
 
-**Zadanie 1.3** (zadanie 1.1 z [2])
 
-W grupie 25 studentów zbadano oceny pracy kontrolnej ze statystyki. Otrzymano wyniki: 3.5; 4; 3; 3.5; 4.5; 3; 3; 3; 2.5; 4; 2; 3.5; 2; 2.5; 3.5; 4; 5; 2.5; 3; 2; 5; 4; 2; 3; 3. Wyznacz podstawowe miary położenia i rozproszenia (wartość średnią, medianę, wariancję próbkową oraz pozycyjny miernik asymetrii).
+#2.1 Przedzialy ufnosci
+σ^2 - wariancja populacji
+S^2 - wariancja proby
+μ - srendia populacji
+X^ - srednia rpoby
 
-## Przedziały ufności
+MODEL 1
+X1,...Xn, dla rozkładu N(μ,σ^2 )
+nieznane μ (srednia populacji), znane σ (odcyhelei standardwoe)
+przdzial ufnosci na poziome 1 - alpha
 
-*(Za: Boratyńska A., Wykłady ze statystyki matematycznej dla II roku WNE.)*
+u_(1-alpha/2) - kwantyl rzedzu 1 - alpha
+[X^ - u_(1-alpha/2) * (σ/sqrt(n)); X^ + u_(1-alpha/2) * (σ/sqrt(n))]
 
-**Model I.** $X_1,\ldots,X_n$ i.i.d. z rozkładu $N(\mu,\sigma^2)$, $\mu$ nieznane, $\sigma>0$ **znane**. Przedział ufności na poziomie $1-\alpha$ dla $\mu$:
+u_(1-alpha/2) - kwantyl 1-alpha/2 rozkladu normalnego N(0,1)
+```
+qnorm(1-alpha/2)
+```
 
-$$\left[\bar{X}-u_{1-\frac{\alpha}{2}}\frac{\sigma}{\sqrt{n}};\ \bar{X}+u_{1-\frac{\alpha}{2}}\frac{\sigma}{\sqrt{n}}\right]$$
+MODEL 2
 
-gdzie $u_{1-\frac{\alpha}{2}}$ jest kwantylem rzędu $1-\frac{\alpha}{2}$ z rozkładu $N(0,1)$.
+X1,...Xn, dla rozkładu N(μ,σ^2 )
+μ nieznane, σ>0 nieznane
+przedzial ufnosci 1-alpha dla μ
+[X^ - t_(1-alpha/2)* (S/sqrt(n)); X^ + t_(1-alpha/2) * (S/sqrt(n))]
 
-**Model II.** $X_1,\ldots,X_n$ i.i.d. z rozkładu $N(\mu,\sigma^2)$, $\mu$ nieznane, $\sigma>0$ **nieznane**. Przedział ufności na poziomie $1-\alpha$ dla $\mu$:
+t_(1-alpha/2) - rozklad t-studenta, kwantyl w miejscu 1-alpha/2
+```
+qt(1-alpha/2, df=n-1)
+```
 
-$$\left[\bar{X}-t_{1-\frac{\alpha}{2},n-1}\frac{S}{\sqrt{n}};\ \bar{X}+t_{1-\frac{\alpha}{2},n-1}\frac{S}{\sqrt{n}}\right]$$
 
-gdzie $t_{1-\frac{\alpha}{2},n-1}$ jest kwantylem rzędu $1-\frac{\alpha}{2}$ z rozkładu t-Studenta z $n-1$ stopniami swobody.
+MODEL 3
+X1,...Xn, dla rozkładu N(μ,σ^2 )
+σ>0 nieznane. Przedzial ufnosci 1-alpha dla wariancji (S^2)
 
-**Model III.** $X_1,\ldots,X_n$ i.i.d. z rozkładu $N(\mu,\sigma^2)$, $\sigma>0$ nieznane. Przedział ufności na poziomie $1-\alpha$ dla wariancji:
+[((S^2(n-1)) / chi-2(1-alpha/2,n-1) );((S^2(n-1)) / chi-2(alpha/2,n-1) )]
 
-$$\left[\frac{S^{2}(n-1)}{\chi^{2}\left(1-\frac{\alpha}{2},n-1\right)};\ \frac{S^{2}(n-1)}{\chi^{2}\left(\frac{\alpha}{2},n-1\right)}\right]$$
+chi-2(1-alpha/2,n-1) - kwantyl rzedu 1-alpha/2 rozkladu chi-2 o n-1 stopnach swobody
 
-**Model IV.** $X_1,\ldots,X_n$ i.i.d. z dowolnego rozkładu o skończonej wartości oczekiwanej i wariancji, $n$ duże ($n>50$), $\sigma$ nieznane. Przybliżony przedział ufności na poziomie $1-\alpha$ dla $\mu$:
+```
+qchisq(1-alpha/2, df=n-1)
+```
 
-$$\left[\bar{X}-u_{1-\frac{\alpha}{2}}\frac{S}{\sqrt{n}};\ \bar{X}+u_{1-\frac{\alpha}{2}}\frac{S}{\sqrt{n}}\right]$$
+MODEL 4
+X1,...Xn, dla owolnego rozkladu o skonczonej wartosci oczekiwanej i wariancji,
+n duze (n>50), σ nieznane. przedzial ufnosci 1-alpha dla μ
 
-**Model V.** Wykonujemy $n$ niezależnych doświadczeń typu sukces-porażka, $n$ duże. $X\sim$ rozkład dwupunktowy, $P(X=1)=p$, $p\in(0,1)$ — prawdopodobieństwo sukcesu (wskaźnik struktury). Przybliżony przedział ufności na poziomie $1-\alpha$ dla $p$:
+[X^ - u_1(1-alpha/2) * S/√n; X^ + u_1(1-alpha/2) * S/√n]
 
-$$\left[\hat{p}-u_{1-\frac{\alpha}{2}}\frac{\sqrt{\hat{p}(1-\hat{p})}}{\sqrt{n}};\ \hat{p}+u_{1-\frac{\alpha}{2}}\frac{\sqrt{\hat{p}(1-\hat{p})}}{\sqrt{n}}\right]$$
+MODEL 5
+N niezaleznych doswiadczen binarnych typu sukces-porażka, n duze
+X~ rozklad dwupunktowy, P(X=1) = p,pc(0,1) prawdopodibenstwo sukcesu
+przyblizony przedzial ufnosci 1 - alpha dla p
+p^ - p z proby
 
-**Model VI.** Dwie niezależne próbki $X_1,\ldots,X_k\sim N(\mu_X,\sigma_X^2)$, $Y_1,\ldots,Y_m\sim N(\mu_Y,\sigma_Y^2)$. Zachodzi $P\left(f_1\frac{S_Y^2}{S_X^2}\leq \frac{\sigma_Y^2}{\sigma_X^2}\leq f_2\frac{S_Y^2}{S_X^2}\right)=1-\alpha$, gdzie $f_1,f_2$ to kwantyle rzędu $\frac{\alpha}{2}$ i $1-\frac{\alpha}{2}$ z rozkładu F-Snedecora z $(k-1)$ i $(m-1)$ stopniami swobody. Przedział ufności na poziomie $1-\alpha$ dla ilorazu wariancji:
+[p^ - u_1(1-alpha/2) * (sqrt(p^(1-p^)) / √n); p^ + u_1(1-alpha/2) * (sqrt(p^(1-p^)) /√n) ]
 
-$$\left[f_{1}\frac{S_{Y}^{2}}{S_{X}^{2}};\ f_{2}\frac{S_{Y}^{2}}{S_{X}^{2}}\right]$$
 
-**Zadanie 3.1** (zadanie 6.1 z [2])
+MOODEL 6
+Dwie niezalezne probki 
+X1, ...,Xk ~N(μx,σ^2 x), Y1, ...,Yk ~N(μY,σ^2 Y)
+P(f1(S^2_Y / S^2_X) =< (σ^2_X / σ^2_Y) =< f2(S^2_Y / S^2_X)) = 1-alpha
+f1,f2 - kwantyle rzedu alhpa/2 i 1-alpha/2 z rozkaldu F-Snedecora
+z (k-1) i (m-1) stopdni swobody
+przedzial ufnosci na poziomie 1-alpha dla waraicji
+[f1 (S^2_Y / S^2_X); f2 (S^2_Y / S^2_X)
+
+
+CO CHCESZ OSZACOWAĆ Z ZADANIA?
+│
+├── 1. PROPORCJĘ / PROCENT / FRAKCJĘ (np. "odsetek osób, które...")
+│      └──> Użyj MODELU V (qnorm, duża próba, dane typu tak/nie)
+│
+├── 2. WARIANCJĘ (lub odchylenie standardowe) JEDNEJ POPULACJI
+│      └──> Użyj MODELU III (qchisq, założenie rozkładu normalnego)[cite: 3]
+│
+├── 3. PORÓWNANIE (ILORAZ) WARIANCJI DWÓCH POPULACJI
+│      └──> Użyj MODELU VI (qf, dwie niezależne próby z rozkładów normalnych)
+│
+└── 4. ŚREDNIĄ (wartość oczekiwaną μ)
+       │
+       ├── Czy w treści podano ZNANE odchylenie/wariancję POPULACJI (σ)?
+       │    ├── TAK ──> Użyj MODELU I (qnorm)[cite: 1]
+       │    └── NIE (znamy tylko S z próby) ──┐
+       │                                      │
+       │    Czy próba jest DUŻA (n > 50)? ────┤
+       │    ├── TAK ──> Użyj MODELU IV (qnorm, działa dla dowolnego rozkładu!)[cite: 4, 5]
+       │    └── NIE ──> Użyj MODELU II (qt, wymaga rozkładu normalnego w populacji)[cite: 2]
+       
+       
+Zadanie 3.1 (zadanie 6.1 z [2])
 
 Firma telekomunikacyjna chce oszacować średnią długość rozmów zamiejscowych w soboty i niedziele na podstawie 20-elementowej próby losowej, dla której średnia wynosi 14,5 i odchylenie standardowe 5,6. Zakładając, że czas rozmowy ma rozkład normalny, wyznaczyć realizację przedziału ufności dla wartości oczekiwanej czasu rozmowy na poziomie ufności 95%. Jak zmieni się długość przedziału ufności, gdy poziom ufności wzrośnie?
 
-**Zadanie 3.2** (zadanie 6.3 z [2])
+```{r}
+n=20
 
-Właściciel kantoru wymiany walut na lotnisku chce wyestymować średnią wielkość gotówki potrzebną do wymiany nocą franków na dolary. Z doświadczenia właściciel wie, że wielkość popytu na dolary ma rozkład normalny. Obserwując popyt przez 10 dni właściciel otrzymał wyniki: $\bar{X}=24.4$, $S=3.5$. Podać realizację przedziału ufności dla wartości oczekiwanej popytu na poziomie ufności 0,9.
+ex = 14.5
+es = 5.6
+#przedzial ufnosci 95%
+a = 0.05
+a2 = 0.025
+#chemy oszacowac srednia populacji
 
-**Zadanie 3.3** (zadanie 6.6 z [2])
+x1 = ex - qt(1-a/2, df=n-1)*(es/sqrt(n))
+x2 = ex + qt(1-a/2, df=n-1)*(es/sqrt(n))
+x12 = ex - qt(1-a2/2, df=n-1)*(es/sqrt(n))
+x22 = ex + qt(1-a2/2, df=n-1)*(es/sqrt(n))
 
-Procent gospodarstw rolnych, których właściciele przekroczyli 60 lat, oznaczmy przez $100\theta\%$. W celu oszacowania parametru $\theta$ pobrano spośród gospodarstw 400-elementową próbkę losową i okazało się, że 144 właścicieli przekroczyło 60 lat. Zbudować przedział ufności dla parametru $\theta$ na poziomie ufności 0,95.
+x1
+x2
+x1
+x2
+```
+Zadanie 3.2 (zadanie 6.3 z [2])
 
-**Zadanie 3.4** (zadanie 6.7 z [2])
+Właściciel kantoru wymiany walut na lotnisku chce wyestymować średnią wielkość gotówki potrzebną do wymiany nocą franków na dolary. Z doświadczenia właściciel wie, że wielkość popytu na dolary ma rozkład normalny. Obserwując popyt przez 10 dni właściciel otrzymał wyniki: X^=24.4, S=3.5. Podać realizację przedziału ufności dla wartości oczekiwanej popytu na poziomie ufności 0,9.
+```{r}
+n=10
+ex = 24.4
+es = 3.5
+a = 1-0.975
+blad = qt(1-a/2,df=n-1)*(es/sqrt(n))
+
+x1 = ex - blad
+x2 = ex + blad
+x1
+x2
+```
+Zadanie 3.3 (zadanie 6.6 z [2])
+
+Procent gospodarstw rolnych, których właściciele przekroczyli 60 lat, oznaczmy przez 100 theta% . W celu oszacowania parametru theta pobrano spośród gospodarstw 400-elementową próbkę losową i okazało się, że 144 właścicieli przekroczyło 60 lat. Zbudować przedział ufności dla parametru theta na poziomie ufności 0,95.
+
+```{r}
+ep = 144/400
+n=400
+a = 1-0.95
+
+blad = qnorm(1-a/2)*((sqrt((ep)*(1-ep)))/sqrt(n))
+
+p1 = ep - blad
+p2 = ep + blad
+p1
+p2
+
+```
+
+Zadanie 3.4 (zadanie 6.7 z [2])
 
 Analityk chce oszacować procent rynku mikrokomputerów opanowany przez IBM. Próba losowa złożona z 590 spółek używających mikrokomputery dała rezultat, że 500 spółek miało komputery IBM. Podać 95% przedział ufności dla procentu rynku opanowanego przez IBM.
+```{r}
+n=590
+ep = 500/590
 
-## Testowanie hipotez statystycznych — porównanie z normą
+a = 1 - 0.95
+blad = qnorm(1-a/2)*((sqrt((ep)*(1-ep)))/sqrt(n))
+p1 = ep - blad
+p2 = ep + blad
+p1
+p2
 
-*(Za: Boratyńska A., Wykłady ze statystyki matematycznej dla II roku WNE.)*
+```
 
-**Model I.** $X_1,\ldots,X_n$ — próba losowa z rozkładu $N(\mu,\sigma^2)$, $\sigma$ **znane**. $H_0: \mu=\mu_0$. Statystyka testowa: $U=\frac{\bar{X}-\mu_0}{\sigma}\sqrt{n}$, przy prawdziwej $H_0$ ma rozkład $N(0,1)$.
 
-Alternatywy: $H_1: \mu\neq\mu_0 \Rightarrow K_1=(-\infty,-u(1-\frac{\alpha}{2}))\cup(u(1-\frac{\alpha}{2}),+\infty)$; $H_2: \mu>\mu_0 \Rightarrow K_2=(u(1-\alpha),+\infty)$; $H_3: \mu<\mu_0 \Rightarrow K_3=(-\infty,-u(1-\alpha))$.
+# 2.2 Testowanie hipotez statystycznych — porównanie z normą
 
-**Model II.** $\sigma$ **nieznane**. $S^2=\frac{1}{n-1}\sum_{i=1}^n (X_i-\bar{X})^2$. Statystyka testowa: $T=\frac{\bar{X}-\mu_0}{S}\sqrt{n}$, przy prawdziwej $H_0$ ma rozkład t-Studenta z $(n-1)$ stopniami swobody. Alternatywy analogiczne do Modelu I, z $t(\cdot)$ w miejsce $u(\cdot)$.
+μ0 - wartość postulowana średniej (norma z hipotezy H0)
+σ0^2 - wartość postulowana wariancji (norma z hipotezy H0)
+p0 - wartość postulowana frakcji/proporcji (norma z hipotezy H0)
+α - poziom istotności (ryzyko błędu I rodzaju)
 
-**Model III.** $H_0: \sigma^2=\sigma_0^2$. Statystyka testowa: $\chi^2=\frac{(n-1)S^2}{\sigma_0^2}$, przy prawdziwej $H_0$ ma rozkład chi-kwadrat z $(n-1)$ stopniami swobody.
+MODEL 1
+X1, ..., Xn — próba z rozkładu N(μ, σ^2)
+σ znane, hipoteza H0: μ = μ0
 
-Alternatywy: $H_1: \sigma^2\neq\sigma_0^2 \Rightarrow K_1=\left(0,\chi^2_{n-1}(1-\frac{\alpha}{2})\right)\cup\left(\chi^2_{n-1}(\frac{\alpha}{2}),+\infty\right)$; $H_2: \sigma^2>\sigma_0^2 \Rightarrow K_2=(\chi^2_{n-1}(1-\alpha),+\infty)$; $H_3: \sigma^2<\sigma_0^2 \Rightarrow K_3=(0,\chi^2_{n-1}(\alpha))$.
+Statystyka testowa:
+U = ((X^ - μ0) / σ) * sqrt(n)  ~ N(0, 1) przy prawdziwej H0
 
-**Model IV.** Rozkład o nieznanej wartości oczekiwanej $\mu$ i skończonej, nieznanej wariancji, $n$ duże ($n\geq 100$). $H_0: \mu=\mu_0$. Statystyka testowa: $U=\frac{\bar{X}-\mu_0}{S}\sqrt{n}$, przy prawdziwej $H_0$ ma asymptotyczny rozkład $N(0,1)$. Alternatywy jak w Modelu I.
+Obszary krytyczne K (gdy U wpadnie do K -> odrzucamy H0):
+- H1: μ != μ0  =>  K1 = (-inf, -u_(1-alpha/2)) U (u_(1-alpha/2), +inf)
+- H2: μ > μ0   =>  K2 = (u_(1-alpha), +inf)
+- H3: μ < μ0   =>  K3 = (-inf, -u_(1-alpha))
 
-**Model V.** $n$ niezależnych doświadczeń sukces-porażka, $n$ duże. $Y$ ma rozkład dwupunktowy, $p\in(0,1)$. $X$ — liczba sukcesów. $H_0: p=p_0$, $\hat{p}=X/n$. Statystyka testowa: $U_{*}=\frac{\hat{p}-p_0}{\sqrt{p_0(1-p_0)}}\sqrt{n}$, przy prawdziwej $H_0$ ma asymptotyczny rozkład $N(0,1)$. Alternatywy analogiczne do Modelu I.
+```r
+# Kwantyle w R:
+qnorm(1 - alpha/2) # dla H1 (dwustronna)
+qnorm(1 - alpha)   # dla H2 i H3 (jednostronne)
+```
 
-**Zadanie 4.1** (zadanie 9.1 z [2])
+MODEL 2
+X1, ..., Xn — próba z rozkładu N(μ, σ^2)
+σ nieznane (używamy S z próby), hipoteza H0: μ = μ0
+Statystyka testowa:
+T = ((X^ - μ0) / S) * sqrt(n)  ~ t-Studenta(n - 1) przy prawdziwej H0
+Obszary krytyczne K (analogicznie do Modelu 1, ale t zamiast u):
+H1: μ != μ0  =>  K1 = (-inf, -t_(1-alpha/2, n-1)) U (t_(1-alpha/2, n-1), +inf)
+H2: μ > μ0   =>  K2 = (t_(1-alpha, n-1), +inf)
+H3: μ < μ0   =>  K3 = (-inf, -t_(1-alpha, n-1))
 
-Dzienne zużycie wody w pewnej fabryce podlega wahaniom losowym o rozkładzie normalnym z odchyleniem standardowym równym 50. Na podstawie 25 dni roku stwierdzono, że średnie dzienne zużycie wody wynosi 1025. Zweryfikować hipotezę, że wartość oczekiwana $\mu$ dziennego zużycia wody wynosi 1000, przy alternatywie, że $\mu>1000$, na poziomie istotności 0,02. Podać postać obszaru krytycznego dla odpowiedniego testu.
+```
+# Kwantyle w R:
+qt(1 - alpha/2, df = n - 1) # dla H1 (dwustronna)
+qt(1 - alpha, df = n - 1)   # dla H2 i H3 (jednostronne)
+```
 
-**Zadanie 4.2** (zadanie 3.46 z [2])
+MODEL 3
+X1, ..., Xn — próba z rozkładu N(μ, σ^2)
+Testowanie wariancji, hipoteza H0: σ^2 = σ0^2
+Statystyka testowa:
+chi2 = ((n - 1) * S^2) / σ0^2  ~ chi-kwadrat(n - 1) przy prawdziwej H0
+Obszary krytyczne K (asymetria — brak wartości ujemnych!):
+H1: σ^2 != σ0^2  =>  K1 = (0, chi2_(alpha/2, n-1)) U (chi2_(1-alpha/2, n-1), +inf)
+H2: σ^2 > σ0^2   =>  K2 = (chi2_(1-alpha, n-1), +inf)
+H3: σ^2 < σ0^2   =>  K3 = (0, chi2_(alpha, n-1))
 
-Wylosowano niezależnie 12 indywidualnych gospodarstw rolnych w pewnej wsi i otrzymano dla nich następujące wielkości uzyskanych plonów owsa (w q/ha): 23.3, 22.1, 21.8, 19.9, 23.7, 22.3, 22.6, 21.5, 21.9, 22.8, 23.0, 22.2. Na poziomie istotności $\alpha=0.05$ zweryfikować hipotezę, że wartość przeciętna plonu owsa w całej wsi wynosi 22.6 q/ha, jeśli alternatywną jest hipoteza, że wartość przeciętna plonu owsa jest wyższa niż w roku ubiegłym, w którym wynosiła 22.6 q/ha.
+```
+# Kwantyle w R:
+qchisq(alpha/2, df = n - 1)     # lewy ogon dla H1
+qchisq(1 - alpha/2, df = n - 1) # prawy ogon dla H1
+qchisq(1 - alpha, df = n - 1)   # dla H2 (>)
+qchisq(alpha, df = n - 1)       # dla H3 (<)
+```
 
-**Zadanie 4.3** (zadanie 3.49 z [2])
+MODEL 4
+Dowolny rozkład o nieznanej μ i skończonej, nieznanej wariancji
+n duże (n >= 100), hipoteza H0: μ = μ0
+Statystyka testowa:
+U = ((X^ - μ0) / S) * sqrt(n)  ~ asymptotycznie N(0, 1)
+Obszary krytyczne K: identyczne jak w Modelu 1 (używamy qnorm).
 
-Zbadano 10 kawałków stali ze względu na granicę plastyczności (w kG/cm²) i otrzymano wyniki: 3570, 3700, 3650, 3590, 3720, 3710, 3550, 3720, 3580, 3630. Zakładając, że granica plastyczności stali ma rozkład normalny, zweryfikować na poziomie istotności $\alpha=0.05$ hipotezę $H$, że wartość przeciętna granicy plastyczności jest równa 3600, jeśli hipotezą alternatywną jest $K: \mu\neq 3600$.
+MODEL 5
+n niezależnych doświadczeń sukces-porażka (rozkład dwupunktowy), n duże
+X - liczba sukcesów, p^ = X / n (frakcja z próby)
+Hipoteza H0: p = p0
+Statystyka testowa:
+U* = ((p^ - p0) / sqrt(p0 * (1 - p0))) * sqrt(n)  ~ asymptotycznie N(0, 1)
+Obszary krytyczne K: identyczne jak w Modelu 1 (używamy qnorm).
 
-**Zadanie 4.4** (zadanie 3.52 z [2])
+### Schemat decyzyjny: Który model wybrać?
 
-Maszyna mieszająca nawóz jest tak nastawiona, aby w każdych 100 kg nawozu było 10 kg azotanu. Zbadano dziesięć 100-kilogramowych worków. Procentowa zawartość azotanu była następująca: 9, 12, 11, 10, 11, 9, 11, 12, 9, 10. Czy na poziomie istotności $\alpha=0.05$ można uważać za słuszną hipotezę, że wartość przeciętna zawartości azotanu w worku jest równa 10%, jeśli hipotezą alternatywną jest hipoteza, że ta wartość przeciętna jest wyższa niż 10%?
+```text
+JAKI PARAMETR PORÓWNUJESZ Z NORMĄ W H0?
+│
+├── 1. PROPORCJĘ / PROCENT / FRAKCJĘ (H0: p = p0)
+│      └──> MODEL 5 (statystyka U*, rozkład N(0,1) -> qnorm)
+│
+├── 2. WARIANCJĘ LUB ODCHYLENIE STANDARDOWE (H0: σ^2 = σ0^2)
+│      └──> MODEL 3 (statystyka chi2, rozkład chi-kwadrat -> qchisq)
+│
+└── 3. ŚREDNIĄ (H0: μ = μ0)
+       │
+       ├── Czy w zadaniu podano ZNANE odchylenie POPULACJI (σ)?
+       │    ├── TAK ──> MODEL 1 (statystyka U, rozkład N(0,1) -> qnorm)
+       │    └── NIE (znamy tylko S z próby) ──┐
+       │                                      │
+       │    Czy próba jest DUŻA (n >= 100)? ──┤
+       │    ├── TAK ──> MODEL 4 (statystyka U, dowolny rozkład -> qnorm)[cite: 6]
+       │    └── NIE ──> MODEL 2 (statystyka T, rozkład t-Studenta -> qt)[cite: 6]
 
-**Zadanie 4.5** (zadanie 3.53 z [2])
 
-Wykonano 15 pomiarów czasu likwidowania zrywów na przędzarce obrączkowej, otrzymując (w s): 4.5, 3.6, 6.0, 6.4, 7.9, 6.9, 6.1, 7.4, 9.0, 4.3, 6.1, 8.2, 4.9, 7.5, 5.8. Zakładając, że rozkład czasu likwidacji zrywu jest normalny, na poziomie istotności $\alpha=0.05$ zweryfikować hipotezę $H$, że wariancja czasu likwidacji zrywów jest równa 2, jeśli hipotezą alternatywną jest $K: \sigma^2>2$.
+H1: u=/=u0, dwa ogony; alpha na pol 1 - alpha/2
+H1 u>u0, jeden prawy ogon, kwantym(1-alpha) do nieskoczonsci
+H1 u<u0, jeden lewy ogon, -nieskoczonsci do kwantym(1-alpha)
+```
 
-## Porównanie dwóch i więcej populacji
+Zadanie 4.1 (zadanie 9.1 z [2])
 
-**Zadanie 5.1** (zadanie 3.58 z [1])
+Dzienne zużycie wody w pewnej fabryce podlega wahaniom losowym o rozkładzie normalnym z odchyleniem standardowym równym 50. Na podstawie 25 dni roku stwierdzono, że średnie dzienne zużycie wody wynosi 1025. Zweryfikować hipotezę, że wartość oczekiwana \mu dziennego zużycia wody wynosi 1000, przy alternatywie, że \mu >1000, na poziomie istotności 0,02. Podać postać obszaru krytycznego dla odpowiedniego testu.
 
-Dla porównania regularności uzyskiwanych wyników sportowych dwóch zawodników (skok w dal) w pewnym okresie wylosowano 12 wyników skoków dla pierwszego zawodnika oraz 9 wyników drugiego, otrzymując rezultaty (w m): dla pierwszego zawodnika: 7.60, 7.81, 8.01, 7.95, 7.15, 8.06, 7.90, 7.91, 7.56, 7.62, 7.85, 8.02; dla drugiego zawodnika: 7.50, 7.90, 8.00, 7.17, 7.28, 7.35, 7.73, 7.20, 7.98. Na poziomie istotności $\alpha=0.05$ zweryfikować hipotezę o jednakowej regularności uzyskiwanych wyników dla obydwu zawodników (tzn. hipotezę, że wariancje rezultatów obydwu zawodników są równe), wobec hipotezy alternatywnej, że regularność pierwszego zawodnika jest wyższa.
+```{r}
+ps = 50
+n=25
+u0 = 1000
+ex = 1025
+a = 0.02
 
-**Zadanie 5.2** (zadanie 3.63 z [1])
+U = ((ex-u0)/ps)*sqrt(n)
+k= c(qnorm(1-a), Inf)
+U
+k
+#U w k, odrzucamy H0
+pval = 1 - pnorm(U)
+pval
+```
 
-Dwóm grupom robotników zlecono wykonanie tej samej pracy z tym jednak, że robotnicy grupy pierwszej przeszli wcześniej odpowiednie przeszkolenie. Zaobserwowana wydajność pracy w pierwszej grupie kształtowała się następująco (w szt/h): 18.6, 17.9, 18.1, 17.0, 18.7, 18.3, podczas gdy w drugiej grupie zaobserwowano wydajności: 17.3, 17.6, 17.1, 16.0, 17.8. Na poziomie istotności $\alpha=0.05$ zweryfikować hipotezę $H$, że średnia wydajność pracy nie zależy od uprzedniego przeszkolenia, jeśli alternatywą jest hipoteza, że średnia wydajność pracy robotników jest wyższa.
+Zadanie 4.2 (zadanie 3.46 z [2])
 
-**Zadanie 5.3** (zadanie 3.64 z [1])
+Wylosowano niezależnie 12 indywidualnych gospodarstw rolnych w pewnej wsi i otrzymano dla nich następujące wielkości uzyskanych plonów owsa (w q/ha): 23.3, 22.1, 21.8, 19.9, 23.7, 22.3, 22.6, 21.5, 21.9, 22.8, 23.0, 22.2. Na poziomie istotności a = 0.05 zweryfikować hipotezę, że wartość przeciętna plonu owsa w całej wsi wynosi 22.6 q/ha, jeśli alternatywną jest hipoteza, że wartość przeciętna plonu owsa jest wyższa niż w roku ubiegłym, w którym wynosiła 22.6 q/ha.
 
-Spośród uczniów pewnego liceum wylosowano 15 z klas pierwszych oraz 12 z klas drugich i obliczono średnią ocen uzyskanych w semestrze dla każdego z uczniów. Otrzymano rezultaty: dla uczniów klas pierwszych: 3.71, 4.28, 2.95, 3.20, 3.38, 4.05, 4.07, 4.98, 3.20, 3.43, 3.09, 4.50, 3.12, 3.68, 3.90; dla uczniów klas drugich: 3.10, 3.38, 4.06, 3.60, 3.81, 4.50, 4.00, 3.25, 4.11, 4.85, 2.80, 4.00. Zakładając, że średnie wyniki ocen mają rozkłady normalne, zweryfikować na poziomie istotności $\alpha=0.05$ hipotezę, że wartości przeciętne ocen uzyskiwanych przez uczniów klasy pierwszej i drugiej są jednakowe, wobec hipotezy alternatywnej, że wartość przeciętna ocen uzyskiwanych przez uczniów klasy drugiej jest większa.
 
-**Zadanie 5.4** (zadanie 3.77 z [1])
+```{r}
+#H1: u>u0
+n=12
+x = c(23.3, 22.1, 21.8, 19.9, 23.7, 22.3, 22.6, 21.5, 21.9, 22.8, 23.0, 22.2)
+ex = mean(x)
+sx = sd(x)
+a = 0.05
+u0 = 22.6
 
-Z produkcji dzianin trzech rodzajów: wiskozy, poliamidu i anilany, pobrano wycinki o wielkości 1m² i wyznaczono ich masy (w g). Wiskoza: 122.4, 118.0, 120.0, 116.0, 120.8; poliamid: 73.6, 73.4, 79.4, 73.9; anilana: 254.7, 243.2, 248.6, 236.0, 245.6. Zakładając, że rozkłady mas wycinków (1m²) dzianin w każdym z trzech rodzajów surowca są normalne, na poziomie istotności $\alpha=0.05$ zweryfikować hipotezę, że wariancje tych rozkładów są jednakowe.
 
-**Zadanie 5.5** (zadanie 3.78 z [1])
+U = ((ex-22.6)/sx)*sqrt(n)
+k= qt(1-a, df=n-1)
+U
+c(k, Inf)
+#H1: u > u0
+```
+#2.3 Zadanie symulacyjne
+```{r}
+set.seed(123)
+R = 10000 #liczba powotrzen Monte Carlo
+blad_mc = function(p_hat){
+  return(sqrt((p_hat*(1-p_hat))/10000))
+}
+```
 
-Poddano badaniu na zginanie trzy różne rodzaje prętów stalowych i otrzymano rezultaty (w liczbie cykli zginających potrzebnych do złamania pręta): 19, 16, 22, 20, 23, 18, 16; 24, 21, 18, 24, 35, 33, 15; 54, 74, 43, 47, 60, 67, 52. Przyjmując, że rozkład liczby cykli potrzebny do złamania pręta jest rozkładem logarytmiczno-normalnym, na poziomie istotności $\alpha=0.05$ zweryfikować hipotezę, że wariancje liczby cykli tych rodzajów prętów są jednakowe, wobec hipotezy alternatywnej, że wariancje te są różne.
+MODEL 5
+N niezaleznych doswiadczen binarnych typu sukces-porażka, n duze
+X~ rozklad dwupunktowy, P(X=1) = p,pc(0,1) prawdopodibenstwo sukcesu
+przyblizony przedzial ufnosci 1 - alpha dla p
+p^ - p z proby
 
-### Tabela zbiorcza — testy istotności dla dwóch średnich ($H_0: m_1=m_2$)
+[p^ - u_1(1-alpha/2) * (sqrt(p^(1-p^)) / √n); p^ + u_1(1-alpha/2) * (sqrt(p^(1-p^)) /√n) ]
 
-Oznaczenia: $m$ — średnia, $\sigma$ — odchylenie standardowe, $S_p^2=(n_1 S_1^2+n_2 S_2^2)/(n_1+n_2-2)$.
+Zadanie 6.1 (rzeczywisty poziom ufności przedziału dla frakcji)
 
-| Model | Założenia | Statystyka testowa | Rozkład | $H_1: m_1\neq m_2$ | $H_1: m_1>m_2$ | $H_1: m_1<m_2$ |
-|---|---|---|---|---|---|---|
-| A | rozkład normalny, nie znamy $m$, znamy $\sigma$ | $U=(\overline{X}_1-\overline{X}_2)/\sqrt{\frac{\sigma_1^2}{n_1}+\frac{\sigma_2^2}{n_2}}$ | $N(0,1)$ | $|U|>u_{1-\alpha/2}$ | $U>u_{1-\alpha}$ | $U<-u_{1-\alpha}$ |
-| B | rozkład normalny, nie znamy $m$ ani $\sigma$ | $T=(\overline{X}_1-\overline{X}_2)/\sqrt{S_p^2\left(\frac{1}{n_1}+\frac{1}{n_2}\right)}$ | $t(n_1+n_2-2)$ | $|T|>t_{1-\alpha/2}$ | $T>t_{1-\alpha}$ | $T<-t_{1-\alpha}$ |
-| C | dowolny rozkład, duża liczba obs., nie znamy $m$ ani $\sigma$ | $U=(\overline{X}_1-\overline{X}_2)/\sqrt{\frac{s_1^2}{n_1}+\frac{s_2^2}{n_2}}$ | $N(0,1)$ | $|U|>u_{1-\alpha/2}$ | $U>u_{1-\alpha}$ | $U<-u_{1-\alpha}$ |
+1. Przedział z Modelu V (przedział Walda) ma nominalny poziom ufności 1-a=0.95.
+Dla n=30 i p {0.01, 0.02, ... 0.99} wyznacz symulacyjnie rzeczywiste prawdopodobieństwo pokrycia 
+ P_p (p ~[p^ +- u_0.975 * (sqrt((p^ *(1-p^))/n) i przedstaw je na wykresie w funkcji p.
+ 
+```{r}
+set.seed(5)
+a = 0.05
+n=30
+pp = seq(from=0.01, to=0.99, by=0.01)
 
-### Testy istotności dla frakcji
+rozklad_p = function(p){
+  n=30
+  ep= (rbinom(10000, n, p))/n
+  
+  blad_p= qnorm(1-a/2)*(sqrt(ep*(1-ep))/sqrt(n))
+  p_lewo = ep - blad_p
+  p_prawo = ep + blad_p
+  
+  x = ifelse((p >p_lewo) & (p<p_prawo), 1,0)
+  
+  return(mean(x))
+}
+rozklad_p(pp[50])
 
-Model A: $H_0: p=p_0$, $\hat{p}=X/n$. Model B: $H_0: p_1=p_2$, $\hat{p}=(X_1+X_2)/(n_1+n_2)$.
+p_dist = c()
+for (i in pp){
+  d <- rozklad_p(i)
+  p_dist <- c(p_dist, d)
+}
+plot(pp, p_dist)
 
-| Model | Założenia | Statystyka testowa | Rozkład | $H_1: p\neq p_0$ (A) / $p_1\neq p_2$ (B) | $H_1: p>p_0$ / $p_1>p_2$ | $H_1: p<p_0$ / $p_1<p_2$ |
-|---|---|---|---|---|---|---|
-| A | rozkład zero-jedynkowy | $U=(\hat{p}-p_0)/\sqrt{\frac{p_0(1-p_0)}{n}}$ | $N(0,1)$ | $|U|>u_{1-\alpha/2}$ | $U>u_{1-\alpha}$ | $U<-u_{1-\alpha}$ |
-| B | rozkład zero-jedynkowy | $U=(p_1-p_2)/\sqrt{\hat{p}(1-\hat{p})\left(\frac{1}{n_1}+\frac{1}{n_2}\right)}$ | $N(0,1)$ | $|U|>u_{1-\alpha/2}$ | $U>u_{1-\alpha}$ | $U<-u_{1-\alpha}$ |
+```
 
-### Test Bartletta
 
-Test Bartletta jest używany do zweryfikowania hipotezy zerowej o tym, że wariancje we wszystkich $k$ populacjach są sobie równe, przeciwko hipotezie alternatywnej, że przynajmniej jedna różni się od pozostałych.
-
-Jeśli dysponujemy $k$ próbkami o licznościach $n_i$ oraz wariancjach w próbkach $S_i^2$, wówczas statystyka testowa w teście Bartletta ma postać:
-
-$$\chi^{2}_{test}=\frac{(N-k)\ln(S_{p}^{2})-\sum_{i=1}^{k}(n_{i}-1)\ln(S_{i}^{2})}{1+\frac{1}{3(k-1)}\left(\sum_{i=1}^{k}\frac{1}{n_{i}-1}-\frac{1}{N-k}\right)}$$
-
-gdzie $N=\sum_{i=1}^{k}n_{i}$ oraz $S_{p}^{2}=\frac{1}{N-k}\sum_{i}(n_{i}-1)S_{i}^{2}$.
-
-Statystyka testowa ma asymptotyczny rozkład $\chi^2$ z $k-1$ stopniami swobody. Hipoteza zerowa jest odrzucana, jeśli $\chi^2_{test}>\chi^2_{k-1,1-\alpha}$.
-
-## Zadania symulacyjne
-
-W poniższych zadaniach liczba powtórzeń Monte Carlo wynosi $R = 10\,000$, o ile nie podano inaczej.
-Przed symulacją należy ustawić ziarno generatora (`set.seed`). Każdy wynik symulacyjny należy
-podać wraz z jego błędem Monte Carlo; dla oszacowania prawdopodobieństwa $\hat\pi$ wynosi on
-$\sqrt{\hat\pi(1-\hat\pi)/R}$.
-
-**Zadanie 6.1** (rzeczywisty poziom ufności przedziału dla frakcji)
-
-Przedział z Modelu V (przedział Walda) ma nominalny poziom ufności $1-\alpha = 0{,}95$.
-
-1. Dla $n = 30$ i $p \in \{0{,}01; 0{,}02; \ldots; 0{,}99\}$ wyznacz symulacyjnie rzeczywiste
-   prawdopodobieństwo pokrycia $P_p\left(p \in [\hat p \pm u_{0{,}975}\sqrt{\hat p(1-\hat p)/n}]\right)$
-   i przedstaw je na wykresie w funkcji $p$.
-2. Oblicz to samo prawdopodobieństwo **dokładnie**, sumując prawdopodobieństwa rozkładu
-   $\mathrm{Bin}(n,p)$ po tych wartościach $X$, dla których przedział zawiera $p$. Porównaj z wynikiem
-   z punktu 1. Wyjaśnij, skąd się bierze nieregularny („piłokształtny”) przebieg wykresu.
-3. Powtórz punkt 2 dla przedziału Wilsona (`prop.test(..., correct = FALSE)$conf.int`) oraz
-   przedziału Cloppera–Pearsona (`binom.test(...)$conf.int`). Który z nich jest konserwatywny?
-4. Dla jakich $p$ przedział Walda daje pokrycie poniżej $0{,}90$? Co wynika stąd dla
-   Zadania 3.3, a co dla Zadania 3.4?
-
-**Zadanie 6.2** (odporność testu t-Studenta na brak normalności)
-
-Rozważ test z Modelu II dla $H_0:\mu=\mu_0$ przy $H_1:\mu\neq\mu_0$, $\alpha = 0{,}05$.
-
-1. Wyznacz symulacyjnie rzeczywisty rozmiar testu (częstość odrzuceń prawdziwej $H_0$), gdy
-   obserwacje pochodzą z rozkładów: $N(0,1)$, $t_3$, $\mathrm{Exp}(1)$, $\mathrm{LogN}(0,1)$,
-   dla $n \in \{5, 10, 30, 100, 500\}$. Za $\mu_0$ przyjmij prawdziwą wartość oczekiwaną
-   danego rozkładu. Wyniki zestaw w tabeli.
-2. Powtórz punkt 1 dla testów jednostronnych ($H_2$ i $H_3$). Dlaczego przy rozkładach
-   asymetrycznych błędy rozmiaru w obu ogonach mają przeciwne znaki?
-3. Na podstawie wyników oceń, od jakiego $n$ uzasadnione jest stosowanie Modelu IV (rozkład dowolny)
-   dla każdego z rozważanych rozkładów. Skomentuj progi $n>50$ i $n\geq 100$ podane w materiałach.
-
-**Zadanie 6.3** (funkcja mocy i dobór liczności próby)
-
-Wróćmy do Zadania 4.1 ($\sigma = 50$, $\mu_0 = 1000$, $H_1:\mu>1000$, $\alpha = 0{,}02$).
-
-1. Wyprowadź wzór na funkcję mocy testu
-   $\beta(\mu) = P_\mu(U > u_{1-\alpha}) = 1-\Phi\!\left(u_{1-\alpha} - \frac{\mu-\mu_0}{\sigma}\sqrt{n}\right)$
-   i oblicz moc dla $\mu = 1020$ oraz $n = 25$.
-2. Zweryfikuj wynik symulacyjnie, a następnie narysuj teoretyczną i empiryczną funkcję mocy
-   na przedziale $\mu \in [990, 1060]$ dla $n \in \{10, 25, 100\}$ na jednym wykresie.
-3. Wyznacz analitycznie najmniejsze $n$, przy którym moc w punkcie $\mu = 1020$ wynosi co najmniej
-   $0{,}9$. Sprawdź wynik funkcją `power.t.test` (przy jakich założeniach wyniki się różnią?).
-4. Załóżmy teraz, że $\sigma$ jest nieznane i stosujemy test t (Model II). Wyznacz symulacyjnie
-   moc w punkcie $\mu = 1020$ dla $n$ z punktu 3. Ile wynosi „koszt” nieznajomości $\sigma$?
-
-**Zadanie 6.4** (problem Behrensa–Fishera)
-
-Model B z tabeli testów dla dwóch średnich zakłada równość wariancji w obu populacjach.
-
-1. Niech $X_1,\ldots,X_{n_1} \sim N(0,\sigma_1^2)$ i $Y_1,\ldots,Y_{n_2} \sim N(0,\sigma_2^2)$.
-   Wyznacz symulacyjnie rzeczywisty rozmiar testu B ($H_1: m_1 \neq m_2$, $\alpha = 0{,}05$) dla
-   $(n_1, n_2) \in \{(10,10),\ (5,20),\ (20,5)\}$ oraz $\sigma_1/\sigma_2 \in \{1, 2, 4\}$.
-2. Powtórz obliczenia dla testu Welcha (`t.test(..., var.equal = FALSE)`).
-3. Wyjaśnij, dlaczego test B jest liberalny, gdy mniejsza próba pochodzi z populacji o większej
-   wariancji, a konserwatywny w sytuacji odwrotnej. *Wskazówka:* porównaj $E\!\left[S_p^2\left(\frac1{n_1}+\frac1{n_2}\right)\right]$
-   z $\mathrm{Var}(\bar X - \bar Y)$.
-4. Rozważ procedurę dwuetapową: najpierw test F równości wariancji, a w zależności od jego wyniku
-   test B lub test Welcha. Wyznacz symulacyjnie jej rozmiar. Czy procedurę tę można polecić?
-
-**Zadanie 6.5** (test Bartletta przy rozkładach o grubych ogonach)
-
-Test Bartletta zakłada normalność rozkładów w populacjach.
-
-1. Dla $k = 3$ grup o licznościach $n_i = 10$ wyznacz symulacyjnie rzeczywisty rozmiar testu
-   Bartletta (`bartlett.test`) przy $\alpha = 0{,}05$, gdy dane we wszystkich grupach pochodzą z tego
-   samego rozkładu: $N(0,1)$, $t_5$, $t_3$, $\mathrm{Laplace}(0,1)$, $\mathrm{Exp}(1)$.
-2. Powtórz punkt 1 dla testu Levene'a w wersji Browna–Forsythe'a (ANOVA na wartościach
-   $|X_{ij} - \mathrm{Med}_i|$; można użyć `car::leveneTest` lub zaimplementować samodzielnie)
-   oraz testu Flignera–Killeena (`fligner.test`).
-3. Dla rozkładu $N(0,1)$ oraz $t_5$ wyznacz moc wszystkich trzech testów, gdy odchylenie
-   standardowe w trzeciej grupie wynosi $c\sigma$, $c \in \{1{,}5;\ 2;\ 3\}$.
-4. Wykaż, że asymptotycznie statystyka $(n-1)S^2/\sigma^2$ ma wariancję
-   $(n-1)^2\,\mathrm{Var}(S^2)/\sigma^4 \approx (n-1)\left(2 + \kappa\right)$, gdzie
-   $\kappa = g_2 - 3$ jest kurtozą nadwyżkową. Wyjaśnij na tej podstawie wyniki z punktu 1.
-   Którego testu użyłbyś w Zadaniu 5.5, a którego w Zadaniu 5.4?
-
-## Bibliografia
-
-[1] Krysicki W., Bartos J., Dyczka W., Królikowska K., Wasilewski M., *Rachunek prawdopodobieństwa i statystyka matematyczna w zadaniach*, tom I i II, Wydawnictwo Naukowe PWN, Warszawa 2010.
-
-[2] Boratyńska A., *Zadania na ćwiczenia ze statystyki matematycznej*.
