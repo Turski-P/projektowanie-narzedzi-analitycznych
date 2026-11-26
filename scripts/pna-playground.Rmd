@@ -517,7 +517,7 @@ rozklad_p = function(p){
   x = ifelse((p >p_lewo) & (p<p_prawo), 1,0)
   
   return(mean(x))
-}
+}rozk
 rozklad_p(pp[50])
 
 p_dist = c()
@@ -526,6 +526,74 @@ for (i in pp){
   p_dist <- c(p_dist, d)
 }
 plot(pp, p_dist)
+
+```
+6.1.2 Oblicz to samo prawdopodobieństwo dokładnie, sumując prawdopodobieństwa rozkładu Bin(n,p) po tych wartościach X, dla których przedział zawiera p. Porównaj z wynikiem z punktu 1. Wyjaśnij, skąd się bierze nieregularny („piłokształtny”) przebieg wykresu.
+
+Odwrotnie polcziyc prawdopodobienstwo.
+Jakie jest prob wyniku 1/30, 2/30 itp
+```{r}
+pp = seq(from=0.01, to=0.99, by=0.01)
+k = seq(0,30, by=1)
+p_w_x = function(k){
+  p_x = c()
+  ek = k/30
+  for (p in pp){
+    blad_p = qnorm(1-0.05/2)*(sqrt((ek)*(1-ek))/sqrt(30))
+      p_lewo = ek - blad_p
+      p_prawo = ek + blad_p
+      if((p >p_lewo) & (p<p_prawo)){
+        p_x=c(p_x, p)}
+  }
+  return(p_x)
+}
+
+p_k = c()
+for (i in k){
+  p_k = c(p_k, sum(p_w_x(i)))
+
+}
+p_k
+
+```
+
+```{r}
+pp = seq(from=0.01, to=0.99, by=0.01)
+k = seq(0,30, by=1)
+p_w_x = function(p){
+  p_x = c()
+  for (i in k){
+    blad_p = qnorm(1-0.05/2)*(sqrt((i/30)*(1-(i/30)))/sqrt(30))
+      p_lewo = i/30 - blad_p
+      p_prawo = i/30 + blad_p
+      if((p >p_lewo) & (p<p_prawo)){
+        p_x=c(p_x, p)}
+  }
+  return(p_x)
+}
+
+
+
+```
+p_k = c()
+for (i in k){
+  p_k = c(p_k, sum(p_w_x(i)))
+
+}
+p_k
+
+```
+
+
+```{r}
+k = seq(0,30, by=1)
+x =c()
+for (p in pp){
+  xp = c()
+  for (i in k){
+    xp= c(xp, dbinom(i,30,p))}
+  x = c(x, sum(xp))}
+x
 
 ```
 
