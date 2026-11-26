@@ -5,6 +5,10 @@ title: "pna_zad"
 output: html_document
 date: "2026-11-03"
 ---
+potencjalny temat na kolowkiwum w styczniu:
+miara naleznosci miedzy rozkladami
+(dystant lokalny/miara odleglosci)
+
 ```{r}
 library(tidyr)
 ```
@@ -597,4 +601,6 @@ x
 
 ```
 
+Po zajeciach 26.11
+Przeczytac Wyk 7 o testowaniu hipotezuzywajac MNW - metody najwiekszej wiarygodnosci
 
